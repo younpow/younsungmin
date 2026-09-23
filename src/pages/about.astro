@@ -1,9 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import about from "../content/about.json";
+interface Entry {
+  year: string;
+  en: string;
+  ko: string;
+}
 interface CV {
-  title: string;
-  entries: { year: string; en: string; ko: string }[];
+  title: { en: string; ko: string };
+  entries: Entry[];
 }
 const cv = about.cv as CV[];
 ---
@@ -17,14 +22,24 @@ const cv = about.cv as CV[];
         {about.biography.ko}
       </p>
     </div>
-    {cv.some((g) => g.entries.length > 0) && (
+    {cv.some((group) => group.entries.length > 0) && (
       <section class="cv">
-        <h2>Selected CV</h2>
+        <h2>
+          <span data-lang="en">Selected activity & publications</span>
+          <span data-lang="ko" lang="ko">
+            주요 활동 및 출판
+          </span>
+        </h2>
         {cv
-          .filter((g) => g.entries.length)
+          .filter((group) => group.entries.length > 0)
           .map((group) => (
             <section>
-              <h3>{group.title}</h3>
+              <h3>
+                <span data-lang="en">{group.title.en}</span>
+                <span data-lang="ko" lang="ko">
+                  {group.title.ko}
+                </span>
+              </h3>
               <dl>
                 {group.entries.map((entry) => (
                   <>

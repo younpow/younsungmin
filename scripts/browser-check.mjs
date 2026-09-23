@@ -142,6 +142,12 @@ try {
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("http://127.0.0.1:4322/work/our-time/2026-summer/");
+  assert.match(await page.locator(".project-history").innerText(), /May 2026/);
+  assert.ok(await page.locator(".project-history").isVisible());
+  const firstPhotoTop = await page
+    .locator('[data-photo="0"]')
+    .evaluate((photo) => photo.getBoundingClientRect().top);
+  assert.ok(firstPhotoTop < 850, "First work photograph should appear early");
   assert.equal(await page.locator("[data-photo]").count(), 14);
   assert.deepEqual(
     await page
@@ -179,14 +185,54 @@ try {
   assert.equal(await page.locator("html").getAttribute("lang"), "ko");
   await page.goto("http://127.0.0.1:4322/about/");
   assert.equal(await page.locator("html").getAttribute("lang"), "ko");
-  assert.ok(await page.locator('[data-lang="ko"]').isVisible());
+  assert.ok(await page.locator('[data-lang="ko"]').first().isVisible());
+  assert.match(await page.locator("body").innerText(), /\uB2E8\uBE5B/);
+  assert.match(await page.locator("body").innerText(), /\uCD08\uD310/);
   await page.locator('[data-language="en"]').click();
+  assert.match(await page.locator("body").innerText(), /Danbit/);
+  assert.match(await page.locator("body").innerText(), /First edition/);
   await page.screenshot({
     path: path.join(root, "outputs/about-desktop.png"),
     fullPage: true,
   });
   await page.goto("http://127.0.0.1:4322/book/our-time/2026-summer/");
+  assert.ok(await page.locator(".book-open-pdf").isVisible());
+  assert.match(
+    await page.locator(".book-details").innerText(),
+    /257.*188 mm/,
+  );
   await page.waitForSelector('canvas[data-page="1"]');
+  const canvasWidth = await page
+    .locator("canvas")
+    .first()
+    .evaluate((c) => c.clientWidth);
+  await page.locator(".book-zoom-in").click();
+  await page.waitForTimeout(150);
+  assert.ok(
+    await page
+      .locator(".book-stage")
+      .evaluate((s) => s.classList.contains("is-zoomed")),
+  );
+  assert.ok(
+    (await page
+      .locator("canvas")
+      .first()
+      .evaluate((c) => c.clientWidth)) > canvasWidth,
+  );
+  await page.locator(".book-zoom-out").click();
+  await page.waitForTimeout(150);
+  await page.locator(".book-fullscreen").click();
+  await page.waitForFunction(
+    () =>
+      document.fullscreenElement?.classList.contains("book-screen") ||
+      document.querySelector(".book-status").textContent.includes("unavailable"),
+  );
+  if (await page.evaluate(() => document.fullscreenElement !== null)) {
+    await page.locator(".book-fullscreen").click();
+    await page.waitForFunction(() => document.fullscreenElement === null);
+  } else {
+    assert.match(await page.locator(".book-status").innerText(), /unavailable/);
+  }
   await page.keyboard.press("ArrowRight");
   await page.waitForSelector('canvas[data-page="3"]');
   assert.deepEqual(

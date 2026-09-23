@@ -3,13 +3,15 @@ import Layout from "../../layouts/Layout.astro";
 import { getProjects, type Project } from "../../lib/content";
 export async function getStaticPaths() {
   return (await getProjects())
-    .filter((p) => p.hasBook)
+    .filter((project) => project.hasBook)
     .map((project) => ({ params: { slug: project.slug }, props: { project } }));
 }
 interface Props {
   project: Project;
 }
 const { project } = Astro.props;
+const details = project.bookDetails;
+if (!details) throw new Error("Missing book details for " + project.slug);
 ---
 
 <Layout
@@ -18,29 +20,121 @@ const { project } = Astro.props;
   }
 >
   <section class="book" data-book={project.book}>
-    <header>
+    <header class="book-heading">
       <h1>{project.title}</h1>
-      <p>{project.chapter}</p>
+      <p class="book-chapter">{project.chapter}</p>
+      <dl class="book-details">
+        <div>
+          <dt>
+            <span data-lang="en">Edition</span>
+            <span data-lang="ko" lang="ko">
+              판
+            </span>
+          </dt>
+          <dd>
+            <span data-lang="en">
+              {details.edition.en}, {details.year}
+            </span>
+            <span data-lang="ko" lang="ko">
+              {details.year}년 {details.edition.ko}
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt>
+            <span data-lang="en">Contents</span>
+            <span data-lang="ko" lang="ko">
+              구성
+            </span>
+          </dt>
+          <dd>
+            <span data-lang="en">
+              {details.pages} pages · {details.photographs} photographs
+            </span>
+            <span data-lang="ko" lang="ko">
+              {details.pages}쪽 · 사진 {details.photographs}점
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt>
+            <span data-lang="en">Format</span>
+            <span data-lang="ko" lang="ko">
+              판형·제본
+            </span>
+          </dt>
+          <dd>
+            {details.dimensions} ·{" "}
+            <span data-lang="en">
+              {details.binding.en} · {details.printedIn.en}
+            </span>
+            <span data-lang="ko" lang="ko">
+              {details.binding.ko} · {details.printedIn.ko}
+            </span>
+          </dd>
+        </div>
+      </dl>
+      <a
+        class="book-open-pdf"
+        href={project.book}
+        target="_blank"
+        rel="noopener"
+      >
+        <span data-lang="en">OPEN PDF ↗</span>
+        <span data-lang="ko" lang="ko">
+          PDF 열기 ↗
+        </span>
+      </a>
     </header>
-    <div class="book-stage" aria-label="Book pages" tabindex="0"></div>
-    <p class="book-status" role="status">
-      Loading book…
-    </p>
-    <div class="book-controls" hidden>
-      <button class="book-prev" aria-label="Previous pages">
-        ← PREVIOUS
-      </button>
-      <button class="book-next" aria-label="Next pages">
-        NEXT →
-      </button>
+    <div class="book-screen">
+      <div class="book-stage" aria-label="Book pages" tabindex="0"></div>
+      <div class="book-controls" hidden>
+        <button class="book-prev" aria-label="Previous pages">
+          <span data-lang="en">← PREVIOUS</span>
+          <span data-lang="ko" lang="ko">
+            ← 이전
+          </span>
+        </button>
+        <button class="book-zoom-out" aria-label="Zoom out" title="Zoom out">
+          −
+        </button>
+        <button class="book-zoom-in" aria-label="Zoom in" title="Zoom in">
+          +
+        </button>
+        <button
+          class="book-fullscreen"
+          aria-pressed="false"
+          aria-label="View full screen"
+        >
+          <span data-lang="en">FULL SCREEN</span>
+          <span data-lang="ko" lang="ko">
+            전체 화면
+          </span>
+        </button>
+        <button class="book-next" aria-label="Next pages">
+          <span data-lang="en">NEXT →</span>
+          <span data-lang="ko" lang="ko">
+            다음 →
+          </span>
+        </button>
+      </div>
+      <p class="book-status" role="status">
+        Loading book…
+      </p>
     </div>
     <p class="book-fallback">
       <a href={project.book} target="_blank" rel="noopener">
-        OPEN PDF IN NEW TAB
+        <span data-lang="en">OPEN PDF IN NEW TAB</span>
+        <span data-lang="ko" lang="ko">
+          PDF를 새 탭에서 열기
+        </span>
       </a>
     </p>
     <a class="text-link" href={"/work/" + project.slug + "/"}>
-      BACK TO WORK
+      <span data-lang="en">BACK TO WORK</span>
+      <span data-lang="ko" lang="ko">
+        작품으로 돌아가기
+      </span>
     </a>
   </section>
   <script>
