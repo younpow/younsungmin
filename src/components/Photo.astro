@@ -1,0 +1,22 @@
+---
+import type { Photo } from "../lib/content";
+interface Props {
+  photo: Photo;
+  eager?: boolean;
+}
+const { photo, eager = false } = Astro.props;
+---
+
+<img
+  class="artwork"
+  src={photo.src}
+  srcset={photo.srcset}
+  sizes="(max-width: 700px) 92vw, 1000px"
+  width={photo.width}
+  height={photo.height}
+  alt={photo.alt}
+  loading={eager ? "eager" : "lazy"}
+  fetchpriority={eager ? "high" : "auto"}
+  decoding="async"
+  draggable="false"
+/>

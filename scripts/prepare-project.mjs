@@ -1,0 +1,40 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import sharp from 'sharp';
+const manifest=path.resolve(process.argv[2]||'local-originals/import.json');
+const config=JSON.parse(await fs.readFile(manifest,'utf8'));
+if(!/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(config.project))throw Error('Invalid project slug');
+const python=process.env.PYTHON||config.python||(process.platform==='win32'?'python':'python3');
+function run(command,args){const result=spawnSync(command,args,{stdio:'inherit'});if(result.error)throw result.error;if(result.status!==0)throw Error(command+' failed');}
+run(python,['scripts/import-project.py',manifest]);
+run(process.execPath,['scripts/prepare-images.mjs',config.project]);
+const filename=path.parse(config.hero).name+'.jpg';
+if(!/^[a-zA-Z0-9_-]+\.jpg$/.test(filename))throw Error('Use a simple hero filename');
+const directory='public/media/home';
+await fs.mkdir(directory+'/responsive',{recursive:true});
+const heroOriginal=path.join('local-originals/home',path.basename(config.hero));
+const source=await fs.readFile(heroOriginal);
+await sharp(source).rotate().resize({width:2000,height:2000,fit:'inside',withoutEnlargement:true}).jpeg({quality:82,mozjpeg:true}).toFile(path.join(directory,filename));
+const variants=[];
+for(const size of [640,1200]){
+ const name=path.parse(filename).name+'-'+size+'.webp';
+ const result=await sharp(source).rotate().resize({width:size,height:size,fit:'inside',withoutEnlargement:true}).webp({quality:80}).toFile(path.join(directory,'responsive',name));
+ variants.push('/media/home/responsive/'+name+' '+result.width+'w');
+}
+const info=await sharp(path.join(directory,filename)).metadata();
+const photo={name:filename,src:'/media/home/'+filename,width:info.width,height:info.height,alt:config.heroAlt||'Photograph from OUR TIME by YOUN SUNGMIN',srcset:[...variants,'/media/home/'+filename+' '+info.width+'w'].join(', ')};
+const metaPath=path.join('src/content/work',config.project,'meta.json');
+const meta=JSON.parse(await fs.readFile(metaPath,'utf8'));
+const book='/media/books/'+config.project.replaceAll('/','-')+'.pdf';
+run(python,['scripts/prepare-book.py',config.pdf,path.join('public',book),path.join('outputs/content-review',config.project.replaceAll('/','-')+'-report.json')]);
+const sitePath='src/config/site.json';
+const site=JSON.parse(await fs.readFile(sitePath,'utf8'));
+site.heroProject=config.project;site.heroPhoto=photo;
+meta.expectedImages=config.expectedImages;meta.book=book;meta.bookReviewed=true;meta.published=true;
+await fs.writeFile(sitePath,JSON.stringify(site,null,2)+'\n');
+await fs.writeFile(metaPath,JSON.stringify(meta,null,2)+'\n');
+console.log('Prepared project, independent home photograph, and verified web PDF.');
+run(process.execPath,['node_modules/astro/bin/astro.mjs','check']);
+run(process.execPath,['node_modules/astro/bin/astro.mjs','build']);
+run(process.execPath,['--test','tests/image-preparation.test.mjs','tests/rendered-html.test.mjs']);

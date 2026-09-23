@@ -1,0 +1,11 @@
+---
+import Layout from "../layouts/Layout.astro";
+import site from "../config/site.json";
+---
+
+<Layout title="Contact | YOUN SUNGMIN">
+  <section class="text-page contact">
+    <h1>CONTACT</h1>
+    <a href={"mailto:" + site.email}>{site.email}</a>
+  </section>
+</Layout>

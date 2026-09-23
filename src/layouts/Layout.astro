@@ -1,0 +1,102 @@
+---
+import site from "../config/site.json";
+import "../styles/site.css";
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+}
+const {
+  title = "YOUN SUNGMIN — Photographer",
+  description = site.description,
+  image,
+  noindex = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {image && (
+      <meta property="og:image" content={new URL(image, site.url).href} />
+    )}
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: site.name,
+        url: site.url,
+        jobTitle: "Photographer",
+        email: site.email,
+      }).replace(/</g, String.fromCharCode(92) + "u003c")}
+    ></script>
+    <script is:inline>
+      try {
+        document.documentElement.lang =
+          localStorage.getItem("ysm-language") === "ko" ? "ko" : "en";
+      } catch {
+        /* Use English when storage is unavailable. */
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Skip to content
+    </a>
+    <header class="header">
+      <a class="wordmark" href="/">
+        YOUN SUNGMIN
+      </a>
+      <nav aria-label="Main navigation">
+        {[
+          ["WORK", "/work/"],
+          ["ABOUT", "/about/"],
+          ["CONTACT", "/contact/"],
+        ].map(([label, url]) => (
+          <a
+            href={url}
+            aria-current={
+              Astro.url.pathname.startsWith(url) ? "page" : undefined
+            }
+          >
+            {label}
+          </a>
+        ))}
+        <span class="languages" aria-label="Language">
+          <button data-language="en" lang="en" aria-pressed="true">
+            EN
+          </button>
+          <span aria-hidden="true">/</span>
+          <button data-language="ko" lang="ko" aria-pressed="false">
+            KR
+          </button>
+        </span>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer>
+      <span>© {new Date().getFullYear()} YOUN SUNGMIN</span>
+      <span>All photographs © YOUN SUNGMIN</span>
+    </footer>
+    <script>
+      import "../scripts/site";
+    </script>
+  </body>
+</html>

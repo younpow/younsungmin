@@ -1,0 +1,39 @@
+{
+  "name": "younsungmin-home",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint src scripts tests astro.config.mjs",
+    "test": "npm run check && npm run lint && npm run build && node --test tests/*.test.mjs",
+    "prepare:images": "node scripts/prepare-images.mjs",
+    "test:browser": "node scripts/browser-check.mjs",
+    "format": "prettier --write src scripts tests astro.config.mjs",
+    "prepare:project": "node scripts/prepare-project.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.3.4",
+    "pdfjs-dist": "^6.3.289",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^22.19.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-astro": "^1.3.1",
+    "globals": "^16.4.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.0.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.59.3"
+  },
+  "type": "module"
+}

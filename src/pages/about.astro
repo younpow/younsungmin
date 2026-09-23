@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import about from "../content/about.json";
+interface CV {
+  title: string;
+  entries: { year: string; en: string; ko: string }[];
+}
+const cv = about.cv as CV[];
+---
+
+<Layout title="About | YOUN SUNGMIN">
+  <article class="text-page">
+    <h1>ABOUT</h1>
+    <div class="prose">
+      <p data-lang="en">{about.biography.en}</p>
+      <p data-lang="ko" lang="ko">
+        {about.biography.ko}
+      </p>
+    </div>
+    {cv.some((g) => g.entries.length > 0) && (
+      <section class="cv">
+        <h2>Selected CV</h2>
+        {cv
+          .filter((g) => g.entries.length)
+          .map((group) => (
+            <section>
+              <h3>{group.title}</h3>
+              <dl>
+                {group.entries.map((entry) => (
+                  <>
+                    <dt>{entry.year}</dt>
+                    <dd>
+                      <span data-lang="en">{entry.en}</span>
+                      <span data-lang="ko" lang="ko">
+                        {entry.ko}
+                      </span>
+                    </dd>
+                  </>
+                ))}
+              </dl>
+            </section>
+          ))}
+      </section>
+    )}
+  </article>
+</Layout>
