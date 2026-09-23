@@ -1,0 +1,18 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import WorkList from "../../components/WorkList.astro";
+import { getProjects } from "../../lib/content";
+const projects = await getProjects();
+---
+
+<Layout title="Work | YOUN SUNGMIN">
+  <section class="work-page">
+    <h1>WORK</h1>
+    <WorkList projects={projects} />
+    {!projects.length && (
+      <a class="text-link" href="/about/">
+        ABOUT THE ARTIST
+      </a>
+    )}
+  </section>
+</Layout>

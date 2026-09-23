@@ -1,0 +1,49 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getProjects, type Project } from "../../lib/content";
+export async function getStaticPaths() {
+  return (await getProjects())
+    .filter((p) => p.hasBook)
+    .map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+---
+
+<Layout
+  title={
+    project.title + " — " + project.chapter + " | Artist Book | YOUN SUNGMIN"
+  }
+>
+  <section class="book" data-book={project.book}>
+    <header>
+      <h1>{project.title}</h1>
+      <p>{project.chapter}</p>
+    </header>
+    <div class="book-stage" aria-label="Book pages" tabindex="0"></div>
+    <p class="book-status" role="status">
+      Loading book…
+    </p>
+    <div class="book-controls" hidden>
+      <button class="book-prev" aria-label="Previous pages">
+        ← PREVIOUS
+      </button>
+      <button class="book-next" aria-label="Next pages">
+        NEXT →
+      </button>
+    </div>
+    <p class="book-fallback">
+      <a href={project.book} target="_blank" rel="noopener">
+        OPEN PDF IN NEW TAB
+      </a>
+    </p>
+    <a class="text-link" href={"/work/" + project.slug + "/"}>
+      BACK TO WORK
+    </a>
+  </section>
+  <script>
+    import "../../scripts/book";
+  </script>
+</Layout>

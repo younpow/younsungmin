@@ -38,3 +38,10 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# Local originals must never be committed
+/local-originals/
+/.astro/
+/test-results/
+/playwright-report/
+/public/vendor/pdfjs/

@@ -1,0 +1,15 @@
+{
+  "title": "OUR TIME",
+  "series": "OUR TIME",
+  "chapter": "2026 SUMMER",
+  "year": 2026,
+  "slug": "our-time/2026-summer",
+  "order": 1,
+  "published": true,
+  "hero": "01.jpg",
+  "book": "/media/books/our-time-2026-summer.pdf",
+  "bookReviewed": true,
+  "expectedImages": 14,
+  "imageDirectory": "/media/work/our-time/2026-summer",
+  "alt": {}
+}

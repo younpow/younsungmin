@@ -1,0 +1,27 @@
+---
+import type { Project } from "../lib/content";
+import Photo from "./Photo.astro";
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+const groups = [...new Set(projects.map((p) => p.series))];
+---
+
+<div class="work-list">
+  {groups.map((series) => (
+    <section class="series">
+      <h2>{series}</h2>
+      <div>
+        {projects
+          .filter((p) => p.series === series)
+          .map((p) => (
+            <a class="work-entry" href={"/work/" + p.slug + "/"}>
+              <Photo photo={p.photos.find((i) => i.name === p.hero)!} />
+              <span>{p.chapter || p.title}</span>
+            </a>
+          ))}
+      </div>
+    </section>
+  ))}
+</div>

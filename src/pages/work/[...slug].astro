@@ -1,0 +1,79 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Photo from "../../components/Photo.astro";
+import { getProjects, type Project } from "../../lib/content";
+export async function getStaticPaths() {
+  return (await getProjects()).map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+---
+
+<Layout
+  title={
+    project.title +
+    (project.chapter ? " — " + project.chapter : "") +
+    " | YOUN SUNGMIN"
+  }
+  image={project.photos.find((p) => p.name === project.hero)?.src}
+>
+  <article>
+    <header class="project-intro">
+      <h1>{project.title}</h1>
+      {project.chapter && <p class="chapter">{project.chapter}</p>}
+      <div class="prose statement">
+        {(["en", "ko"] as const).map((lang) => (
+          <div data-lang={lang} lang={lang}>
+            {project.statements[lang].map((p) => (
+              <p>{p}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+      {project.hasBook && (
+        <a class="text-link" href={"/book/" + project.slug + "/"}>
+          VIEW BOOK
+        </a>
+      )}
+    </header>
+    <div class="sequence">
+      {project.photos.map((photo, index) => (
+        <button
+          class="photo-open"
+          data-photo={index}
+          aria-label={"Open " + photo.alt}
+        >
+          <Photo photo={photo} />
+        </button>
+      ))}
+    </div>
+    <a class="text-link back" href="/work/">
+      BACK TO WORK
+    </a>
+  </article>
+  <dialog class="lightbox" aria-label="Photograph viewer">
+    <button
+      class="lightbox-close"
+      autofocus
+      aria-label="Close photograph viewer"
+    >
+      CLOSE
+    </button>
+    <button class="lightbox-prev" aria-label="Previous photograph">
+      ←
+    </button>
+    <img draggable="false" alt="" />
+    <button class="lightbox-next" aria-label="Next photograph">
+      →
+    </button>
+    <p class="sr-only lightbox-status" aria-live="polite"></p>
+  </dialog>
+  <script>
+    import "../../scripts/lightbox";
+  </script>
+</Layout>

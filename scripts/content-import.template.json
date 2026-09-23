@@ -1,0 +1,8 @@
+{
+  "project": "our-time/2027-spring",
+  "expectedImages": 14,
+  "zip": "local-originals/2027-spring.zip",
+  "pdf": "local-originals/2027-spring.pdf",
+  "hero": "local-originals/home/hero.jpg",
+  "heroAlt": "Describe the photograph for screen readers."
+}
