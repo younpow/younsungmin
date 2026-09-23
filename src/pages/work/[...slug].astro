@@ -20,17 +20,25 @@ const { project } = Astro.props;
     (project.chapter ? " — " + project.chapter : "") +
     " | YOUN SUNGMIN"
   }
-  image={project.photos.find((p) => p.name === project.hero)?.src}
+  image={project.photos.find((photo) => photo.name === project.hero)?.src}
 >
   <article>
     <header class="project-intro">
       <h1>{project.title}</h1>
       {project.chapter && <p class="chapter">{project.chapter}</p>}
+      {project.projectNote && (
+        <div class="project-history">
+          <p data-lang="en">{project.projectNote.en}</p>
+          <p data-lang="ko" lang="ko">
+            {project.projectNote.ko}
+          </p>
+        </div>
+      )}
       <div class="prose statement">
         {(["en", "ko"] as const).map((lang) => (
           <div data-lang={lang} lang={lang}>
-            {project.statements[lang].map((p) => (
-              <p>{p}</p>
+            {project.statements[lang].map((paragraph) => (
+              <p>{paragraph}</p>
             ))}
           </div>
         ))}

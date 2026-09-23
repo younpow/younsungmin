@@ -201,7 +201,7 @@ footer {
 }
 .project-intro {
   max-width: 680px;
-  margin: 85px auto 125px;
+  margin: 48px auto 66px;
 }
 .chapter {
   font-size: 12px;
@@ -209,7 +209,16 @@ footer {
   margin-top: 12px;
 }
 .statement {
-  margin-top: 48px;
+  margin-top: 30px;
+}
+.project-history {
+  margin-top: 26px;
+  color: #737373;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.project-history p + p {
+  margin-top: 10px;
 }
 .sequence {
   max-width: 1100px;
@@ -241,10 +250,13 @@ footer {
   margin: 100px auto 80px;
 }
 .cv {
-  margin-top: 90px;
+  margin-top: 70px;
 }
 .cv h2 {
-  margin-bottom: 40px;
+  margin-bottom: 35px;
+}
+.cv h2 span {
+  font-size: 14px;
 }
 .cv h3 {
   margin: 35px 0 20px;
@@ -260,6 +272,9 @@ footer {
 }
 .cv dd {
   margin: 0;
+}
+.cv dd span {
+  display: inline-block;
 }
 .contact a {
   font-size: 16px;
@@ -323,17 +338,59 @@ footer {
   margin: 60px auto 100px;
   text-align: center;
 }
-.book header p {
-  margin-top: 12px;
+.book-heading {
+  max-width: 720px;
+  margin: 0 auto 26px;
+}
+.book .book-chapter {
+  margin-top: 8px;
   color: #737373;
   font-size: 12px;
+}
+.book-details {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 24px 0 14px;
+  color: #737373;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.book-details div {
+  display: flex;
+  gap: 6px;
+}
+.book-details dt {
+  color: #999;
+}
+.book-details dd {
+  margin: 0;
+  color: #555;
+}
+.book-open-pdf {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 10px 12px;
+  font-size: 10px;
+  letter-spacing: 0.035em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.book-screen {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 .book-stage {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 58vh;
-  margin: 40px auto 25px;
+  margin: 18px auto 0;
+  padding: 14px;
+  overflow: auto;
+  border: 1px solid #e9e9e6;
+  background: #fcfcfb;
   gap: 0;
   touch-action: pan-y;
 }
@@ -343,27 +400,80 @@ footer {
   height: auto;
   object-fit: contain;
   max-height: 65svh;
+  outline: 1px solid #e9e9e6;
+  outline-offset: -1px;
 }
 .book-stage canvas:only-child {
   max-width: 100%;
 }
+.book-stage.is-zoomed {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.book-stage.is-zoomed canvas {
+  max-width: none;
+  max-height: none;
+}
+.book-screen:fullscreen {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  padding: 4vh 4vw 2vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff;
+}
+.book-screen:fullscreen .book-stage {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+}
+.book-screen:fullscreen .book-stage canvas {
+  max-height: 86svh;
+}
+.book-screen:fullscreen .book-controls {
+  flex: 0 0 auto;
+  margin: 12px 0 0;
+}
 .book-controls {
   display: flex;
   justify-content: center;
-  gap: 70px;
-  margin: 25px 0;
+  gap: clamp(16px, 4vw, 58px);
+  align-items: center;
+  margin: 18px 0 4px;
   font-size: 11px;
 }
 .book-controls button {
   min-height: 40px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.book-zoom-in,
+.book-zoom-out {
+  width: 36px;
+  font-size: 17px !important;
+}
+.book-fullscreen {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .book-status,
 .book-fallback {
   font-size: 11px;
   color: #737373;
 }
+.book-status {
+  margin-top: 12px;
+}
 .book-fallback {
-  margin-top: 20px;
+  margin-top: 18px;
+}
+.book-screen:fullscreen .book-status {
+  flex: none;
+  margin-top: 6px;
 }
 [hidden] {
   display: none !important;
@@ -449,10 +559,10 @@ html[lang="ko"] [data-lang="en"] {
     margin-bottom: 50px;
   }
   .project-intro {
-    margin: 55px auto 85px;
+    margin: 40px auto 44px;
   }
   .statement {
-    margin-top: 35px;
+    margin-top: 20px;
   }
   .sequence {
     gap: 80px;
@@ -478,17 +588,38 @@ html[lang="ko"] [data-lang="en"] {
     right: 25px;
   }
   .book {
-    margin-top: 45px;
+    margin-top: 35px;
+  }
+  .book-details {
+    gap: 5px 14px;
+    margin: 18px 0 10px;
+    font-size: 9px;
+  }
+  .book-stage {
+    min-height: 48vh;
+    padding: 10px 6px;
   }
   .book-stage canvas {
     max-width: 100%;
   }
-  .book-stage {
-    min-height: 45vh;
-  }
   .book-controls {
-    gap: 45px;
+    gap: 8px;
+    justify-content: space-between;
   }
+  .book-controls button {
+    font-size: 9px;
+  }
+  .book-zoom-in,
+  .book-zoom-out {
+    width: 26px;
+  }
+  .book-screen:fullscreen {
+    padding: 12px 8px 6px;
+  }
+  .book-screen:fullscreen .book-stage canvas {
+    max-height: 80svh;
+  }
+
   footer {
     padding: 35px 5vw 24px;
     flex-direction: column;

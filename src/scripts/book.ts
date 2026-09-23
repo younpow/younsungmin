@@ -4,13 +4,19 @@ import { bookPages } from "../lib/order.mjs";
 GlobalWorkerOptions.workerSrc = workerUrl;
 const container = document.querySelector<HTMLElement>("[data-book]");
 if (container) {
+  const screen = container.querySelector<HTMLElement>(".book-screen")!;
   const stage = container.querySelector<HTMLElement>(".book-stage")!;
   const status = container.querySelector<HTMLElement>(".book-status")!;
   const controls = container.querySelector<HTMLElement>(".book-controls")!;
   const prev = container.querySelector<HTMLButtonElement>(".book-prev")!;
   const next = container.querySelector<HTMLButtonElement>(".book-next")!;
+  const zoomOut = container.querySelector<HTMLButtonElement>(".book-zoom-out")!;
+  const zoomIn = container.querySelector<HTMLButtonElement>(".book-zoom-in")!;
+  const fullscreen =
+    container.querySelector<HTMLButtonElement>(".book-fullscreen")!;
   const media = matchMedia("(min-width: 701px)");
   let current = 1;
+  let zoom = 1;
   let version = 0;
   try {
     const pdf = await getDocument({
@@ -27,6 +33,9 @@ if (container) {
       current = pages[0];
       prev.disabled = current === 1;
       next.disabled = pages[pages.length - 1] === pdf.numPages;
+      zoomOut.disabled = zoom <= 1;
+      zoomIn.disabled = zoom >= 1.5;
+      stage.classList.toggle("is-zoomed", zoom > 1);
       status.textContent = "Loading pages…";
       stage.setAttribute("aria-busy", "true");
       try {
@@ -35,10 +44,14 @@ if (container) {
             const page = await pdf.getPage(number);
             const original = page.getViewport({ scale: 1 });
             const width = (stage.clientWidth || 800) / pages.length;
-            const scale = Math.min(
-              width / original.width,
-              (window.innerHeight * 0.65) / original.height,
-            );
+            const maximumHeight =
+              window.innerHeight *
+              (document.fullscreenElement === screen ? 0.86 : 0.65);
+            const scale =
+              Math.min(
+                width / original.width,
+                maximumHeight / original.height,
+              ) * zoom;
             const ratio = Math.min(window.devicePixelRatio || 1, 2);
             const viewport = page.getViewport({ scale: scale * ratio });
             const canvas = document.createElement("canvas");
@@ -54,6 +67,7 @@ if (container) {
         );
         if (ticket !== version) return;
         stage.replaceChildren(...canvases);
+        if (zoom > 1) stage.scrollTo({ left: 0, top: 0 });
         status.textContent = pages.join(" – ") + " / " + pdf.numPages;
       } catch {
         if (ticket === version)
@@ -72,15 +86,67 @@ if (container) {
     }
     prev.addEventListener("click", () => turn(-1));
     next.addEventListener("click", () => turn(1));
-    document.addEventListener("keydown", (e) => {
-      if (e.altKey || e.ctrlKey || e.metaKey) return;
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
+    zoomOut.addEventListener("click", () => {
+      zoom = Math.max(1, +(zoom - 0.25).toFixed(2));
+      void render();
+    });
+    zoomIn.addEventListener("click", () => {
+      zoom = Math.min(1.5, +(zoom + 0.25).toFixed(2));
+      void render();
+    });
+    fullscreen.addEventListener("click", async () => {
+      try {
+        if (document.fullscreenElement === screen)
+          await document.exitFullscreen();
+        else await screen.requestFullscreen();
+      } catch {
+        status.textContent =
+          "Full-screen view is unavailable here. You can open the PDF above.";
+      }
+    });
+    document.addEventListener("fullscreenchange", () => {
+      const active = document.fullscreenElement === screen;
+      fullscreen.setAttribute("aria-pressed", String(active));
+      fullscreen.setAttribute(
+        "aria-label",
+        active ? "Exit full screen" : "View full screen",
+      );
+      const enLabel = fullscreen.querySelector<HTMLElement>('[data-lang="en"]');
+      const koLabel = fullscreen.querySelector<HTMLElement>('[data-lang="ko"]');
+      if (enLabel)
+        enLabel.textContent = active ? "EXIT FULL SCREEN" : "FULL SCREEN";
+      if (koLabel)
+        koLabel.textContent = active ? "전체 화면 종료" : "전체 화면";
+      const korean = document.documentElement.lang === "ko";
+      fullscreen.setAttribute(
+        "aria-label",
+        active
+          ? korean
+            ? "전체 화면 종료"
+            : "Exit full screen"
+          : korean
+            ? "전체 화면"
+            : "View full screen",
+      );
+      void render();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
         turn(-1);
       }
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
         turn(1);
+      }
+      if ((event.key === "+" || event.key === "=") && zoom < 1.5) {
+        zoom = Math.min(1.5, zoom + 0.25);
+        void render();
+      }
+      if (event.key === "-" && zoom > 1) {
+        zoom = Math.max(1, zoom - 0.25);
+        void render();
       }
     });
     let timer: ReturnType<typeof setTimeout>;
@@ -92,17 +158,17 @@ if (container) {
     let y = 0;
     stage.addEventListener(
       "touchstart",
-      (e) => {
-        x = e.changedTouches[0].clientX;
-        y = e.changedTouches[0].clientY;
+      (event) => {
+        x = event.changedTouches[0].clientX;
+        y = event.changedTouches[0].clientY;
       },
       { passive: true },
     );
     stage.addEventListener(
       "touchend",
-      (e) => {
-        const dx = e.changedTouches[0].clientX - x;
-        const dy = e.changedTouches[0].clientY - y;
+      (event) => {
+        const dx = event.changedTouches[0].clientX - x;
+        const dy = event.changedTouches[0].clientY - y;
         if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy))
           turn(dx < 0 ? 1 : -1);
       },
@@ -111,6 +177,6 @@ if (container) {
     controls.hidden = false;
     await render();
   } catch {
-    status.textContent = "Unable to load the book. Please open the PDF below.";
+    status.textContent = "Unable to load the book. Please open the PDF above.";
   }
 }

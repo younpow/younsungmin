@@ -11,6 +11,16 @@ export interface Photo {
   srcset?: string;
 }
 export interface Project {
+  projectNote?: { en: string; ko: string };
+  bookDetails?: {
+    year: number;
+    edition: { en: string; ko: string };
+    pages: number;
+    photographs: number;
+    dimensions: string;
+    binding: { en: string; ko: string };
+    printedIn: { en: string; ko: string };
+  };
   title: string;
   series: string;
   chapter: string;
