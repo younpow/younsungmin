@@ -19,8 +19,8 @@
     "printedIn": { "en": "Printed in Korea", "ko": "한국 인쇄" }
   },
   "projectNote": {
-    "en": "An ongoing project begun in May 2026. 2026 SUMMER is its first chapter, issued as a 28-page first edition with 14 photographs.",
-    "ko": "2026년 5월 시작해 현재 이어가고 있는 프로젝트입니다. 첫 장인 2026 SUMMER는 사진 14점을 수록한 28쪽 아티스트북 초판으로 발행되었습니다."
+    "en": "An ongoing project begun in March 2026. 2026 SUMMER is its second chapter. Its 28-page first-edition artist book contains 14 photographs.",
+    "ko": "2026년 3월 시작해 현재 이어가고 있는 프로젝트입니다. 2026 SUMMER는 두 번째 장입니다. 28쪽 초판 아티스트북에는 사진 14점이 수록되어 있습니다."
   },
   "expectedImages": 14,
   "imageDirectory": "/media/work/our-time/2026-summer",

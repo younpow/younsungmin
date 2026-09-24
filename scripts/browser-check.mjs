@@ -127,6 +127,7 @@ try {
       "/about/",
       "/contact/",
       "/work/our-time/2026-summer/",
+      "/work/our-time/2026-spring/",
       "/book/our-time/2026-summer/",
     ]) {
       await page.goto("http://127.0.0.1:4322" + route);
@@ -141,8 +142,82 @@ try {
     }
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("http://127.0.0.1:4322/");
+  assert.match(
+    await page.locator(".home-hero img").getAttribute("src"),
+    /ourtime_2026-03-08_01\.jpg$/,
+  );
+  await page.goto("http://127.0.0.1:4322/work/");
+  assert.deepEqual(
+    await page
+      .locator('.work-entry[href^="/work/our-time/"]')
+      .evaluateAll((links) => links.map((a) => a.getAttribute("href"))),
+    ["/work/our-time/2026-spring/", "/work/our-time/2026-summer/"],
+  );
+  await page.goto("http://127.0.0.1:4322/work/our-time/2026-spring/");
+  assert.equal(await page.locator("[data-photo]").count(), 4);
+  assert.deepEqual(
+    await page
+      .locator("[data-photo] img")
+      .evaluateAll((imgs) =>
+        imgs.map((img) => img.getAttribute("src").split("/").pop()),
+      ),
+    ["01.jpg", "02.jpg", "03.jpg", "04.jpg"],
+  );
+  assert.ok(
+    await page
+      .locator("[data-photo] img")
+      .evaluateAll((imgs) =>
+        imgs.every((img) => getComputedStyle(img).objectFit === "contain"),
+      ),
+  );
+  for (const img of await page.locator("[data-photo] img").all()) {
+    await img.scrollIntoViewIfNeeded();
+    await img.evaluate((image) => image.decode());
+  }
+  await page.locator('[data-language="ko"]').click();
+  assert.equal(await page.locator("html").getAttribute("lang"), "ko");
+  assert.match(
+    await page.locator(".project-history").innerText(),
+    /2026\uB144 3\uC6D4/,
+  );
+  assert.match(
+    await page.locator('.statement [data-lang="ko"]').innerText(),
+    /3\uC6D4\uACFC 4\uC6D4/,
+  );
+  await page.locator('[data-language="en"]').click();
+  assert.match(
+    await page.locator(".project-history").innerText(),
+    /March 2026/,
+  );
+  assert.match(
+    await page.locator('.statement [data-lang="en"]').innerText(),
+    /March and April/,
+  );
+  assert.equal(await page.locator('a[href^="/book/"]').count(), 0);
+  await page.locator('[data-photo="0"]').click();
+  await page.keyboard.press("ArrowRight");
+  assert.match(await page.locator("dialog img").getAttribute("src"), /02.jpg$/);
+  await page.locator(".lightbox-next").click();
+  assert.match(await page.locator("dialog img").getAttribute("src"), /03.jpg$/);
+  await page.keyboard.press("Escape");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("http://127.0.0.1:4322/work/our-time/2026-spring/");
+  await page.locator('[data-photo="0"]').click();
+  await page.locator(".lightbox-next").click();
+  assert.match(await page.locator("dialog img").getAttribute("src"), /02.jpg$/);
+  await page.keyboard.press("Escape");
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("http://127.0.0.1:4322/work/our-time/2026-summer/");
-  assert.match(await page.locator(".project-history").innerText(), /May 2026/);
+  assert.equal(await page.locator("[data-photo]").count(), 14);
+  assert.equal(
+    await page.locator('a[href^="/book/"]').getAttribute("href"),
+    "/book/our-time/2026-summer/",
+  );
+  assert.match(
+    await page.locator(".project-history").innerText(),
+    /March 2026/,
+  );
   assert.ok(await page.locator(".project-history").isVisible());
   const firstPhotoTop = await page
     .locator('[data-photo="0"]')
@@ -197,10 +272,7 @@ try {
   });
   await page.goto("http://127.0.0.1:4322/book/our-time/2026-summer/");
   assert.ok(await page.locator(".book-open-pdf").isVisible());
-  assert.match(
-    await page.locator(".book-details").innerText(),
-    /257.*188 mm/,
-  );
+  assert.match(await page.locator(".book-details").innerText(), /257.*188 mm/);
   await page.waitForSelector('canvas[data-page="1"]');
   const canvasWidth = await page
     .locator("canvas")
@@ -225,7 +297,9 @@ try {
   await page.waitForFunction(
     () =>
       document.fullscreenElement?.classList.contains("book-screen") ||
-      document.querySelector(".book-status").textContent.includes("unavailable"),
+      document
+        .querySelector(".book-status")
+        .textContent.includes("unavailable"),
   );
   if (await page.evaluate(() => document.fullscreenElement !== null)) {
     await page.locator(".book-fullscreen").click();
@@ -271,7 +345,7 @@ try {
   assert.ok(await page.locator(".book-fallback a").isVisible());
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: six routes × four widths; 14-image order; contain; lightbox arrows/Escape/focus; language persistence; cover/spreads/blank page/mobile; PDF failure fallback.",
+    "PASS: seven routes at four widths; Spring images, order, language, lightbox and mobile; both WORK entries; unchanged home hero and Summer book; existing Summer/book regressions.",
   );
 } finally {
   await browser?.close();
