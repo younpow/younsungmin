@@ -4,13 +4,14 @@
   "email": "younpow@gmail.com",
   "heroProject": "our-time/2026-summer",
   "heroImage": "01.jpg",
-  "description": "YOUN SUNGMIN is a photographer based in South Korea. Long-term photographic projects on shared time and the traces left in everyday spaces.",
+  "description": "YOUN SUNGMIN is a photographer based in South Korea. His work observes shared time, changing distance and the spaces around a child.",
   "heroPhoto": {
     "name": "ourtime_2026-03-08_01.jpg",
     "src": "/media/home/ourtime_2026-03-08_01.jpg",
     "width": 2000,
     "height": 1333,
     "alt": "A child kneels beside potted plants in a sunlit room, framed by a sofa, an armchair and a wide window.",
-    "srcset": "/media/home/responsive/ourtime_2026-03-08_01-640.webp 640w, /media/home/responsive/ourtime_2026-03-08_01-1200.webp 1200w, /media/home/ourtime_2026-03-08_01.jpg 2000w"
+    "srcset": "/media/home/responsive/ourtime_2026-03-08_01-640.webp 640w, /media/home/responsive/ourtime_2026-03-08_01-1200.webp 1200w, /media/home/ourtime_2026-03-08_01.jpg 2000w",
+    "altKo": "아이가 화분 곁에 무릎을 꿇은 모습이 소파와 안락의자, 넓은 창으로 둘러싸인 방에 담겨 있다."
   }
 }

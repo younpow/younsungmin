@@ -18,6 +18,8 @@ if (!details) throw new Error("Missing book details for " + project.slug);
   title={
     project.title + " — " + project.chapter + " | Artist Book | YOUN SUNGMIN"
   }
+  description={`Artist book for ${project.title} — ${project.chapter}, ${details.year}. ${details.pages} pages with ${details.photographs} photographs.`}
+  image={project.photos.find((photo) => photo.name === project.hero)?.src}
 >
   <section class="book" data-book={project.book}>
     <header class="book-heading">
@@ -87,7 +89,6 @@ if (!details) throw new Error("Missing book details for " + project.slug);
       </a>
     </header>
     <div class="book-screen">
-      <div class="book-stage" aria-label="Book pages" tabindex="0"></div>
       <div class="book-controls" hidden>
         <button class="book-prev" aria-label="Previous pages">
           <span data-lang="en">← PREVIOUS</span>
@@ -118,6 +119,7 @@ if (!details) throw new Error("Missing book details for " + project.slug);
           </span>
         </button>
       </div>
+      <div class="book-stage" aria-label="Book pages" tabindex="0"></div>
       <p class="book-status" role="status">
         Loading book…
       </p>

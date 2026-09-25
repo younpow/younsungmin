@@ -170,7 +170,111 @@ footer {
   margin: 90px auto 140px;
 }
 .work-page > h1 {
-  margin-bottom: 80px;
+  margin-bottom: 28px;
+}
+.work-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+  margin: 0 0 76px 25%;
+  font-size: 11px;
+}
+.work-index a {
+  color: #737373;
+}
+.work-index a:hover {
+  color: #111;
+}
+.project-index {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 72px 54px;
+}
+.project-index-card h2 {
+  margin-bottom: 24px;
+  font-size: 12px;
+}
+.project-index-image {
+  display: block;
+}
+.project-index-image .artwork {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.project-chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin-top: 20px;
+  color: #737373;
+  font-size: 11px;
+}
+.series-page .project-intro {
+  margin-bottom: 52px;
+}
+.series-statement {
+  max-width: 680px;
+  margin: 0 auto 110px;
+}
+.series-statement h2 {
+  margin-bottom: 24px;
+  color: #737373;
+  font-size: 12px;
+}
+.series-statement .statement {
+  margin-top: 0;
+}
+.season-list {
+  max-width: 980px;
+  margin: 0 auto;
+}
+.season-entry {
+  display: block;
+  margin-bottom: 72px;
+}
+.season-entry .artwork {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.season-entry span {
+  display: block;
+  margin-top: 18px;
+  color: #737373;
+  font-size: 11px;
+}
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 26px;
+  margin-top: 24px;
+}
+.project-actions .text-link {
+  margin-top: 0;
+}
+.chapter-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 26px;
+  color: #737373;
+  font-size: 12px;
+}
+.chapter-index a {
+  text-underline-offset: 4px;
+}
+.project-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 28px;
+  margin: 90px auto 75px;
+}
+.project-navigation .text-link,
+.project-navigation .back {
+  margin: 0;
 }
 .series {
   display: grid;
@@ -207,6 +311,11 @@ footer {
   font-size: 12px;
   color: #737373;
   margin-top: 12px;
+}
+.project-completion {
+  margin-top: 10px;
+  color: #737373;
+  font-size: 11px;
 }
 .statement {
   margin-top: 30px;
@@ -512,14 +621,17 @@ html[lang="ko"] [data-lang="en"] {
   }
   .header nav {
     margin-top: 22px;
-    gap: 22px;
-    font-size: 10px;
+    gap: 18px;
+    font-size: 11px;
   }
   .languages {
     margin-left: auto;
   }
   .header nav a {
-    padding: 8px 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 2px;
   }
   main {
     padding: 0 5vw;
@@ -544,6 +656,28 @@ html[lang="ko"] [data-lang="en"] {
   .selected {
     margin-top: 95px;
   }
+  .project-index {
+    grid-template-columns: 1fr;
+    gap: 58px;
+  }
+  .project-index-card h2 {
+    margin-bottom: 18px;
+  }
+  .project-index-image .artwork {
+    height: auto;
+  }
+  .project-chapters {
+    margin-top: 16px;
+  }
+  .series-statement {
+    margin-bottom: 68px;
+  }
+  .season-entry {
+    margin-bottom: 48px;
+  }
+  .season-entry .artwork {
+    height: auto;
+  }
   .series {
     grid-template-columns: 1fr;
     gap: 25px;
@@ -556,7 +690,11 @@ html[lang="ko"] [data-lang="en"] {
     margin-top: 55px;
   }
   .work-page > h1 {
-    margin-bottom: 50px;
+    margin-bottom: 24px;
+  }
+  .work-index {
+    gap: 12px 22px;
+    margin: 0 0 54px;
   }
   .project-intro {
     margin: 40px auto 44px;
@@ -607,7 +745,8 @@ html[lang="ko"] [data-lang="en"] {
     justify-content: space-between;
   }
   .book-controls button {
-    font-size: 9px;
+    min-height: 44px;
+    font-size: 10px;
   }
   .book-zoom-in,
   .book-zoom-out {

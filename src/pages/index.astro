@@ -6,7 +6,9 @@ import { getProjects } from "../lib/content";
 import site from "../config/site.json";
 const projects = await getProjects();
 const hero = projects.find((p) => p.slug === site.heroProject);
-const photo = hero ? (site.heroPhoto || hero.photos.find((p) => p.name === site.heroImage)) : undefined;
+const photo = hero
+  ? site.heroPhoto || hero.photos.find((p) => p.name === site.heroImage)
+  : undefined;
 if (hero && !photo) throw new Error("Check heroImage in src/config/site.json");
 ---
 
@@ -15,21 +17,41 @@ if (hero && !photo) throw new Error("Check heroImage in src/config/site.json");
     <>
       <section class="home-hero">
         <a
-          href={"/work/" + hero.slug + "/"}
-          aria-label={"View " + hero.title + " — " + hero.chapter}
+          href="/work/"
+          data-aria-en="View all projects"
+          data-aria-ko="모든 작품 보기"
+          aria-label="View all projects"
         >
           <Photo photo={photo} eager />
         </a>
         <div class="hero-note">
-          <h1>{hero.title}</h1>
+          <h1>
+            <a
+              href={
+                hero.series === "OUR TIME"
+                  ? "/work/our-time/"
+                  : "/work/" + hero.slug + "/"
+              }
+            >
+              {hero.title}
+            </a>
+          </h1>
           {!site.heroPhoto && <p>{hero.chapter}</p>}
-          <a class="text-link" href={"/work/" + hero.slug + "/"}>
-            VIEW WORK
+          <a class="text-link" href="/work/">
+            <span data-lang="en">VIEW ALL WORK</span>
+            <span data-lang="ko" lang="ko">
+              전체 작품 보기
+            </span>
           </a>
         </div>
       </section>
       <section class="selected">
-        <h2>Selected Work</h2>
+        <h2>
+          <span data-lang="en">Selected Work</span>
+          <span data-lang="ko" lang="ko">
+            주요 작업
+          </span>
+        </h2>
         <WorkList projects={projects} />
       </section>
     </>

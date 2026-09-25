@@ -8,6 +8,7 @@ export interface Photo {
   width: number;
   height: number;
   alt: string;
+  altKo?: string;
   srcset?: string;
 }
 export interface Project {
@@ -32,8 +33,13 @@ export interface Project {
   book?: string;
   bookReviewed?: boolean;
   expectedImages?: number;
+  imageOrder?: string[];
+  completed?: boolean;
+  status?: "ongoing" | "completed";
+  seoTitle?: string;
+  seoDescription?: string;
   imageDirectory: string;
-  alt: Record<string, string>;
+  alt: Record<string, string | { en: string; ko: string }>;
   photos: Photo[];
   statements: { en: string[]; ko: string[] };
   hasBook: boolean;
@@ -65,7 +71,7 @@ export async function getProjects(): Promise<Project[]> {
     )
       throw new Error("Invalid project path: " + file);
     const directory = path.join("public", meta.imageDirectory);
-    const names = sortImages(await fs.readdir(directory));
+    const names = sortImages(await fs.readdir(directory), meta.imageOrder);
     if (
       !names.length ||
       (meta.expectedImages && names.length !== meta.expectedImages)
@@ -110,18 +116,24 @@ export async function getProjects(): Promise<Project[]> {
             }
           }),
         );
+        const description = meta.alt?.[name];
+        const fallback =
+          "Photograph " +
+          String(index + 1).padStart(2, "0") +
+          " from " +
+          meta.title +
+          (meta.chapter ? " — " + meta.chapter : "");
+        const alt =
+          typeof description === "string" ? description : description?.en;
+        const altKo =
+          typeof description === "object" ? description.ko : undefined;
         return {
           name,
           src: meta.imageDirectory + "/" + name,
           width: info.width,
           height: info.height,
-          alt:
-            meta.alt?.[name] ||
-            "Photograph " +
-              String(index + 1).padStart(2, "0") +
-              " from " +
-              meta.title +
-              (meta.chapter ? " — " + meta.chapter : ""),
+          alt: alt || fallback,
+          ...(altKo ? { altKo } : {}),
           srcset: [
             ...candidates.filter(Boolean),
             meta.imageDirectory + "/" + name + " " + info.width + "w",
@@ -133,16 +145,19 @@ export async function getProjects(): Promise<Project[]> {
       throw new Error("Missing project hero: " + meta.slug);
     const statements = { en: [] as string[], ko: [] as string[] };
     for (const lang of ["en", "ko"] as const) {
-      const text = await fs.readFile(
-        path.join(path.dirname(file), "statement." + lang + ".md"),
-        "utf8",
-      );
-      statements[lang] = text
-        .trim()
-        .split(/\r?\n\s*\r?\n/)
-        .filter(Boolean);
-      if (!statements[lang].length)
-        throw new Error("Missing statement: " + file);
+      try {
+        const text = await fs.readFile(
+          path.join(path.dirname(file), "statement." + lang + ".md"),
+          "utf8",
+        );
+        statements[lang] = text
+          .trim()
+          .split(/\r?\n\s*\r?\n/)
+          .filter(Boolean);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+        statements[lang] = [];
+      }
     }
     let hasBook = false;
     if (meta.book && meta.bookReviewed) {

@@ -5,6 +5,7 @@ export async function GET() {
   const paths = [
     "/",
     "/work/",
+    "/work/our-time/",
     "/about/",
     "/contact/",
     ...projects.map((p) => "/work/" + p.slug + "/"),

@@ -10,7 +10,7 @@ Node.js 22.13 이상을 설치하고 저장소에서 터미널을 엽니다.
 - 공개 전 타입·린트·빌드·경로 검사: `npm test`
 - 빌드 결과 미리보기: `npm run preview`
 
-OUR TIME — 2026 SPRING과 2026 SUMMER는 공개 설정되었습니다. SPRING은 사진 4장, SUMMER는 사진 14장을 사용합니다. DISTANCE와 ORIGIN은 자료가 준비되기 전까지 비공개입니다.
+OUR TIME — 2026 SPRING과 2026 SUMMER, DISTANCE, ORIGIN은 공개 설정되었습니다. SPRING은 사진 4장, SUMMER는 사진 14장, DISTANCE는 사진 8장, ORIGIN은 사진 6장을 사용합니다.
 
 ## 자동 처리와 다음 시즌 준비
 
@@ -35,12 +35,20 @@ OUR TIME — 2026 SPRING과 2026 SUMMER는 공개 설정되었습니다. SPRING�
 
 ## 사진 순서와 alt
 
-숫자 기준으로 01, 02, 03… 정렬합니다. 동일 번호가 둘이면 오류입니다. OUR TIME은 책의 확정 순서를 그대로 유지하세요. 이름을 변경한 뒤 이전 출력 사진을 정리하고 변환을 다시 실행합니다.
+일반 파일명은 숫자 기준으로 01, 02, 03… 정렬합니다. `lens_` 접두 파일도 숫자 순으로 처리합니다. 명시적 `imageOrder`가 있으면 목록에 정확히 모든 파일을 한 번씩 기재합니다. 동일 번호가 둘이면 오류입니다. OUR TIME은 책의 확정 순서를 그대로 유지하세요. 이름을 변경한 뒤 이전 출력 사진을 정리하고 변환을 다시 실행합니다.
 meta.json의 alt에 `"01.jpg": "실제 사진을 설명하는 문장"` 형식으로 접근성 설명을 넣습니다. 미입력 시 작품명과 번호로 중립적인 설명을 사용합니다. 화면에는 캡션이 없습니다.
+
+## ORIGIN 사진 6장
+
+원본은 **local-originals/origin/lens_01.jpg ~ lens_06.jpg**에 보관합니다. 상세 페이지와 확대 보기 순서는 `lens_01.jpg`, `lens_06.jpg`, `lens_02.jpg`, `lens_03.jpg`, `lens_04.jpg`, `lens_05.jpg`입니다. `src/content/work/origin/meta.json`의 `imageOrder`가 이 순서를 고정하고, 목록·공유 대표 이미지는 `lens_05.jpg`입니다. 공개 페이지는 **/work/origin/**이며 작가노트, 촬영 기간, 책 정보는 확인되지 않아 추가하지 않습니다.
+
+## DISTANCE 사진 8장 (원본 사진은 보관)
+
+원본 보관본은 **local-originals/distance/**에 유지합니다. 현재 웹에 공개하는 사진과 확대 보기 순서는 `distance_01.jpg`, `distance_02.jpg`, `distance_04.jpg`, `distance_05.jpg`, `distance_06.jpg`, `distance_07.jpg`, `distance_09.jpg`, `distance_10.jpg`입니다. `distance_03.jpg`와 `distance_08.jpg`는 현재 선택에서 제외되어 배포용 출력물을 삭제했습니다. 다음 `npm run prepare:images -- distance` 실행은 로컬의 보관 원본 전체를 다시 생성하므로, 공개하기 전에 출력물을 검토하고 제외 사진을 다시 제거해야 합니다. 목록·공유 대표 이미지는 `distance_06.jpg`입니다. 프로젝트는 2021년에 시작되어 현재 진행 중입니다. 영문·국문 작가노트는 `src/content/work/distance/statement.en.md`와 `statement.ko.md`에서 수정합니다. 공개 페이지는 **/work/distance/**입니다.
 
 ## Artist Statement 수정
 
-**src/content/work/our-time/2026-summer/statement.en.md**와 **statement.ko.md**를 수정합니다. 빈 줄로 문단을 나눕니다. 안전한 일반 문단으로 표시하므로 Markdown 장식 문법은 사용하지 않습니다.
+OUR TIME 통합 작가노트는 **src/content/work/our-time/statement.en.md**와 **statement.ko.md**에서 수정합니다. WORK의 프로젝트 대표 사진에서 OUR TIME 소개 페이지로 이동하며, 시즌별 페이지의 연결 문구도 통합 노트로 안내합니다. 빈 줄로 문단을 나눕니다. 안전한 일반 문단으로 표시하므로 Markdown 장식 문법은 사용하지 않습니다.
 
 ## 홈 대표사진 변경
 
@@ -57,7 +65,7 @@ meta.json의 alt에 `"01.jpg": "실제 사진을 설명하는 문장"` 형식으
 
 meta.json의 `published:true` / `published:false`로 제어합니다. 비공개 작품의 페이지, 목록, sitemap과 해당 media 파일은 배포 빌드에서 제외합니다. 개발 서버는 public 파일에 접근 가능하므로 외부에 공개하지 마세요. 공개 저장소의 Git 이력이나 과거 배포 캐시까지 회수하는 기능은 아닙니다.
 
-DISTANCE와 ORIGIN은 실제 사진과 두 언어 statement가 생겼을 때만 공개합니다. 없는 이력이나 작업 설명을 임의로 넣지 마세요.
+비공개 작품은 사진과 필요한 두 언어 statement가 준비된 뒤 공개합니다. ORIGIN은 제목과 사진으로 공개하며, 저장소에 작가노트나 촬영 기간이 확인되지 않아 별도 설명을 표시하지 않습니다. 없는 이력이나 작업 설명을 임의로 넣지 마세요.
 
 ## 새 OUR TIME 계절
 
@@ -102,11 +110,11 @@ Awards / Grants와 Publications / Artist Books도 같은 구조입니다. 빈 �
 
 ## GitHub Pages 배포
 
-1. 변경사항을 검토하고 GitHub main 브랜치에 반영합니다. 현재 작업은 로컬이며 push하지 않았습니다.
+1. 변경사항을 검토하고 GitHub main 브랜치에 반영합니다.
 2. Settings → Pages → Source를 **GitHub Actions**로 선택합니다.
 3. main에 push하거나 Actions의 GitHub Pages workflow를 수동 실행합니다. 기본 브랜치가 main이 아니면 .github/workflows/pages.yml의 branches를 수정합니다.
 4. Pages의 Custom domain을 **younsungmin.com**으로 확인하고 해당 저장소의 GitHub Pages DNS와 HTTPS를 설정합니다. 기존 DNS를 먼저 확인하세요.
-5. workflow는 검사 후 dist만 배포합니다. public/CNAME으로 도메인을 유지합니다.
+5. workflow는 검사 후 dist만 배포합니다. public/CNAME으로 도메인을 유지합니다. 배포 완료 후 Actions 성공과 공개 주소의 페이지·사진 링크를 확인합니다.
 
 기존 루트 CNAME, .openai/hosting.json 및 Cloudflare 초기 코드/설정은 보존되어 있습니다. 새 Astro 배포에는 사용되지 않습니다.
 실제 사진의 순서·비율·밝기와 PDF의 빈 페이지는 자료를 넣은 뒤 작가가 최종 확인하세요.

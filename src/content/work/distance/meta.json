@@ -4,8 +4,60 @@
   "chapter": "",
   "slug": "distance",
   "order": 2,
-  "published": false,
-  "hero": "01.jpg",
+  "published": true,
+  "status": "ongoing",
+  "year": 2021,
+  "projectNote": {
+    "en": "An ongoing project begun in 2021.",
+    "ko": "2021년에 시작해 현재 이어가고 있는 프로젝트."
+  },
+  "seoTitle": "DISTANCE — Youn Sungmin",
+  "seoDescription": "An ongoing photographic project begun in 2021, following changing distance and visibility between a parent and child.",
+  "hero": "distance_06.jpg",
+  "expectedImages": 8,
+  "imageOrder": [
+    "distance_01.jpg",
+    "distance_02.jpg",
+    "distance_04.jpg",
+    "distance_05.jpg",
+    "distance_06.jpg",
+    "distance_07.jpg",
+    "distance_09.jpg",
+    "distance_10.jpg"
+  ],
   "imageDirectory": "/media/work/distance",
-  "alt": {}
+  "alt": {
+    "distance_01.jpg": {
+      "en": "Two people walk along a stone path, their shadows stretching toward the camera.",
+      "ko": "돌길을 걷는 두 사람과 카메라 쪽으로 길게 드리운 그림자."
+    },
+    "distance_02.jpg": {
+      "en": "People sit together inside a room seen through a reflective window.",
+      "ko": "반사가 비치는 창 너머 실내에 함께 앉아 있는 사람들."
+    },
+    "distance_04.jpg": {
+      "en": "A small child walks along a path through low green fields.",
+      "ko": "낮은 초록 밭 사이의 길을 걷는 작은 아이."
+    },
+    "distance_05.jpg": {
+      "en": "A child is partly obscured by leaves and branches.",
+      "ko": "잎과 나뭇가지 사이로 일부만 보이는 아이."
+    },
+    "distance_06.jpg": {
+      "en": "A child looks out through a window toward rooftops and apartment buildings.",
+      "ko": "창을 통해 지붕과 아파트가 있는 바깥을 바라보는 아이."
+    },
+    "distance_07.jpg": {
+      "en": "Small figures stand along a shoreline beneath a broad pale sky.",
+      "ko": "넓고 옅은 하늘 아래 해안가에 서 있는 작은 인물들."
+    },
+    "distance_09.jpg": {
+      "en": "A child walks beneath an umbrella toward a pavilion among trees.",
+      "ko": "나무들 사이 정자를 향해 우산을 쓰고 걷는 아이."
+    },
+    "distance_10.jpg": {
+      "en": "A small child walks away along a shaded wooden footbridge beneath tall trees.",
+      "ko": "키 큰 나무 아래 그늘진 나무다리를 따라 멀어지는 작은 아이."
+    }
+  }
 }

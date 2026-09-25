@@ -124,10 +124,13 @@ try {
     for (const route of [
       "/",
       "/work/",
+      "/work/our-time/",
       "/about/",
       "/contact/",
       "/work/our-time/2026-summer/",
       "/work/our-time/2026-spring/",
+      "/work/distance/",
+      "/work/origin/",
       "/book/our-time/2026-summer/",
     ]) {
       await page.goto("http://127.0.0.1:4322" + route);
@@ -147,13 +150,177 @@ try {
     await page.locator(".home-hero img").getAttribute("src"),
     /ourtime_2026-03-08_01\.jpg$/,
   );
+  await page.goto("http://127.0.0.1:4322/");
+  assert.equal(
+    await page.locator(".home-hero > a").getAttribute("href"),
+    "/work/",
+  );
+  assert.equal(
+    await page.locator(".hero-note a").getAttribute("href"),
+    "/work/",
+  );
   await page.goto("http://127.0.0.1:4322/work/");
   assert.deepEqual(
     await page
-      .locator('.work-entry[href^="/work/our-time/"]')
+      .locator(".project-index-card > h2")
+      .evaluateAll((headings) => headings.map((heading) => heading.innerText)),
+    ["OUR TIME", "DISTANCE", "ORIGIN"],
+  );
+  assert.deepEqual(
+    await page
+      .locator(".project-chapters a")
       .evaluateAll((links) => links.map((a) => a.getAttribute("href"))),
     ["/work/our-time/2026-spring/", "/work/our-time/2026-summer/"],
   );
+  await page.goto("http://127.0.0.1:4322/work/our-time/");
+  assert.ok(await page.locator("#statement").isVisible());
+  assert.equal(await page.locator(".season-entry").count(), 2);
+  await page.goto("http://127.0.0.1:4322/work/origin/");
+  assert.equal(await page.locator("h1").innerText(), "ORIGIN");
+  assert.equal(await page.locator(".project-history").count(), 0);
+  assert.equal(await page.locator(".statement").count(), 0);
+  assert.equal(await page.locator('a[href^="/book/"]').count(), 0);
+  assert.equal(await page.locator(".back").getAttribute("href"), "/work/");
+  assert.equal(
+    await page.locator('link[rel="canonical"]').getAttribute("href"),
+    "https://younsungmin.com/work/origin/",
+  );
+  assert.match(
+    await page.locator('meta[property="og:image"]').getAttribute("content"),
+    /\/media\/work\/origin\/lens_05\.jpg$/,
+  );
+  assert.deepEqual(
+    await page
+      .locator("[data-photo] img")
+      .evaluateAll((imgs) =>
+        imgs.map((img) => img.getAttribute("src").split("/").pop()),
+      ),
+    [
+      "lens_01.jpg",
+      "lens_06.jpg",
+      "lens_02.jpg",
+      "lens_03.jpg",
+      "lens_04.jpg",
+      "lens_05.jpg",
+    ],
+  );
+  for (const img of await page.locator("[data-photo] img").all()) {
+    await img.scrollIntoViewIfNeeded();
+    await img.evaluate((image) => image.decode());
+  }
+  assert.ok(
+    await page
+      .locator("[data-photo] img")
+      .evaluateAll((imgs) =>
+        imgs.every(
+          (img) =>
+            getComputedStyle(img).objectFit === "contain" &&
+            img.naturalWidth > 0 &&
+            img.naturalHeight > 0 &&
+            Math.abs(
+              Number(img.getAttribute("width")) /
+                Number(img.getAttribute("height")) -
+                img.naturalWidth / img.naturalHeight,
+            ) < 0.002,
+        ),
+      ),
+  );
+  await page.locator('[data-language="ko"]').click();
+  assert.equal(await page.locator("html").getAttribute("lang"), "ko");
+  assert.match(
+    await page.locator('[data-photo="0"] img').getAttribute("alt"),
+    /신생아/,
+  );
+  assert.match(
+    await page.locator('[data-photo="0"]').getAttribute("aria-label"),
+    /사진 열기/,
+  );
+  await page.locator('[data-language="en"]').click();
+  assert.match(
+    await page.locator('[data-photo="0"] img').getAttribute("alt"),
+    /newborn/,
+  );
+  await page.locator('[data-photo="0"]').click();
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /lens_01\.jpg$/,
+  );
+  await page.keyboard.press("ArrowRight");
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /lens_06\.jpg$/,
+  );
+  await page.locator(".lightbox-next").click();
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /lens_02\.jpg$/,
+  );
+  await page.keyboard.press("ArrowLeft");
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /lens_06\.jpg$/,
+  );
+  await page.keyboard.press("Escape");
+  assert.equal(await page.locator("dialog").evaluate((d) => d.open), false);
+  await page.goto("http://127.0.0.1:4322/work/distance/");
+  assert.equal(await page.locator("h1").innerText(), "DISTANCE");
+  assert.match(await page.locator(".project-history").innerText(), /2021/);
+  assert.equal(await page.locator("[data-photo]").count(), 10);
+  assert.deepEqual(
+    await page.locator("[data-photo] img").evaluateAll((imgs) =>
+      imgs.map((img) => img.getAttribute("src").split("/").pop()),
+    ),
+    Array.from({ length: 10 }, (_, index) => `distance_${String(index + 1).padStart(2, "0")}.jpg`),
+  );
+  assert.match(
+    await page.locator('meta[property="og:image"]').getAttribute("content"),
+    /\/media\/work\/distance\/distance_06\.jpg$/,
+  );
+  for (const img of await page.locator("[data-photo] img").all()) {
+    await img.scrollIntoViewIfNeeded();
+    await img.evaluate((image) => image.decode());
+  }
+  assert.ok(
+    await page.locator("[data-photo] img").evaluateAll((imgs) =>
+      imgs.every((img) =>
+        getComputedStyle(img).objectFit === "contain" &&
+        img.naturalWidth > 0 &&
+        img.naturalHeight > 0 &&
+        Math.abs(Number(img.getAttribute("width")) / Number(img.getAttribute("height")) - img.naturalWidth / img.naturalHeight) < 0.002,
+      ),
+    ),
+  );
+  await page.locator('[data-language="ko"]').click();
+  assert.match(await page.locator(".project-history").innerText(), /2021년/);
+  assert.match(await page.locator('[data-photo="0"] img').getAttribute("alt"), /돌길/);
+  await page.locator('[data-language="en"]').click();
+  await page.locator('[data-photo="0"]').click();
+  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_01\.jpg$/);
+  await page.keyboard.press("ArrowRight");
+  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_02\.jpg$/);
+  await page.locator(".lightbox-next").click();
+  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_03\.jpg$/);
+  await page.keyboard.press("Escape");
+  assert.equal(await page.locator("dialog").evaluate((dialog) => dialog.open), false);  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("http://127.0.0.1:4322/work/distance/");
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  await page.locator('[data-photo="0"]').click();
+  await page.locator(".lightbox-next").click();
+  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_02\.jpg$/);
+  await page.keyboard.press("Escape");  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("http://127.0.0.1:4322/work/origin/");
+  assert.ok(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  );
+  await page.locator('[data-photo="0"]').click();
+  await page.locator(".lightbox-next").click();
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /lens_06\.jpg$/,
+  );
+  await page.keyboard.press("Escape");
   await page.goto("http://127.0.0.1:4322/work/our-time/2026-spring/");
   assert.equal(await page.locator("[data-photo]").count(), 4);
   assert.deepEqual(
@@ -345,7 +512,7 @@ try {
   assert.ok(await page.locator(".book-fallback a").isVisible());
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: seven routes at four widths; Spring images, order, language, lightbox and mobile; both WORK entries; unchanged home hero and Summer book; existing Summer/book regressions.",
+    "PASS: ten routes at four widths; OUR TIME statement and season links; Spring, DISTANCE and ORIGIN images, order, language, lightbox and mobile; top-level WORK projects; unchanged home hero and Summer book; existing Summer/book regressions.",
   );
 } finally {
   await browser?.close();

@@ -5,6 +5,19 @@ function setLanguage(lang: string) {
     .forEach((b) =>
       b.setAttribute("aria-pressed", String(b.dataset.language === lang)),
     );
+  document
+    .querySelectorAll<HTMLElement>("[data-aria-en][data-aria-ko]")
+    .forEach((element) => {
+      const label =
+        lang === "ko" ? element.dataset.ariaKo : element.dataset.ariaEn;
+      if (label) element.setAttribute("aria-label", label);
+    });
+  document
+    .querySelectorAll<HTMLImageElement>("[data-alt-en][data-alt-ko]")
+    .forEach((image) => {
+      const alt = lang === "ko" ? image.dataset.altKo : image.dataset.altEn;
+      if (alt) image.alt = alt;
+    });
 }
 setLanguage(document.documentElement.lang);
 document.querySelectorAll<HTMLButtonElement>("[data-language]").forEach((b) =>

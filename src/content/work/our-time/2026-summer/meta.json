@@ -11,12 +11,21 @@
   "bookReviewed": true,
   "bookDetails": {
     "year": 2026,
-    "edition": { "en": "First edition", "ko": "초판" },
+    "edition": {
+      "en": "First edition",
+      "ko": "초판"
+    },
     "pages": 28,
     "photographs": 14,
     "dimensions": "257 × 188 mm",
-    "binding": { "en": "Saddle-stitched", "ko": "중철 제본" },
-    "printedIn": { "en": "Printed in Korea", "ko": "한국 인쇄" }
+    "binding": {
+      "en": "Saddle-stitched",
+      "ko": "중철 제본"
+    },
+    "printedIn": {
+      "en": "Printed in Korea",
+      "ko": "한국 인쇄"
+    }
   },
   "projectNote": {
     "en": "An ongoing project begun in March 2026. 2026 SUMMER is its second chapter. Its 28-page first-edition artist book contains 14 photographs.",
@@ -24,5 +33,64 @@
   },
   "expectedImages": 14,
   "imageDirectory": "/media/work/our-time/2026-summer",
-  "alt": {}
+  "alt": {
+    "01.jpg": {
+      "en": "A child holds a guitar in the room.",
+      "ko": "아이가 방 안에서 기타를 들고 있다."
+    },
+    "02.jpg": {
+      "en": "A child lies on the floor in the room.",
+      "ko": "아이가 방 안 바닥에 누워 있다."
+    },
+    "03.jpg": {
+      "en": "A child is partly hidden behind a curtain.",
+      "ko": "아이가 커튼 뒤에 일부 가려져 있다."
+    },
+    "04.jpg": {
+      "en": "Potted plants stand by the window in an empty room.",
+      "ko": "빈 방의 창가에 화분들이 놓여 있다."
+    },
+    "05.jpg": {
+      "en": "A curtain hangs beside the window.",
+      "ko": "창 옆에 커튼이 드리워져 있다."
+    },
+    "06.jpg": {
+      "en": "A child sits in a chair by the window.",
+      "ko": "아이가 창가 의자에 앉아 있다."
+    },
+    "07.jpg": {
+      "en": "A child sits in a chair behind an open curtain.",
+      "ko": "아이가 열린 커튼 뒤 창가 의자에 앉아 있다."
+    },
+    "08.jpg": {
+      "en": "An empty room at dusk, with lights by the window.",
+      "ko": "창가에 불이 켜진 해질녘의 빈 방."
+    },
+    "09.jpg": {
+      "en": "A child stands by the window at dusk.",
+      "ko": "아이가 해질녘 창가에 서 있다."
+    },
+    "10.jpg": {
+      "en": "A child stands by a hazy window.",
+      "ko": "아이가 흐릿한 창가에 서 있다."
+    },
+    "11.jpg": {
+      "en": "A child moves beside a white curtain.",
+      "ko": "아이가 흰 커튼 곁에서 움직인다."
+    },
+    "12.jpg": {
+      "en": "A drying rack stands in the empty room.",
+      "ko": "빈 방에 건조대가 놓여 있다."
+    },
+    "13.jpg": {
+      "en": "A child sits among potted plants.",
+      "ko": "아이가 화분들 사이에 앉아 있다."
+    },
+    "14.jpg": {
+      "en": "An empty room in low light.",
+      "ko": "어두운 빛 속의 빈 방."
+    }
+  },
+  "seoTitle": "OUR TIME — 2026 SUMMER | YOUN SUNGMIN",
+  "seoDescription": "The second chapter of OUR TIME, an ongoing project begun in March 2026. The 2026 SUMMER artist book contains 14 photographs."
 }

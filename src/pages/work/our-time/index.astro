@@ -1,0 +1,95 @@
+---
+import { getProjects } from "../../../lib/content";
+import Photo from "../../../components/Photo.astro";
+import Layout from "../../../layouts/Layout.astro";
+import StatementEn from "../../../content/work/our-time/statement.en.md";
+import StatementKo from "../../../content/work/our-time/statement.ko.md";
+
+const projects = (await getProjects())
+  .filter((project) => project.series === "OUR TIME")
+  .sort((a, b) => a.order - b.order);
+const representative = projects.at(-1);
+if (!representative) {
+  throw new Error("OUR TIME needs at least one published chapter");
+}
+---
+
+<Layout
+  title="OUR TIME | YOUN SUNGMIN"
+  description="An ongoing photographic project begun in March 2026, following shared time and changing details in a familiar room."
+  image={
+    representative.photos.find((photo) => photo.name === representative.hero)
+      ?.src
+  }
+>
+  <article class="series-page">
+    <header class="project-intro">
+      <h1>OUR TIME</h1>
+      <p class="project-history">
+        <span data-lang="en">An ongoing project begun in March 2026.</span>
+        <span data-lang="ko" lang="ko">
+          2026년 3월 시작해 현재 이어가고 있는 프로젝트.
+        </span>
+      </p>
+      <nav
+        class="chapter-index"
+        aria-label="OUR TIME chapters"
+        data-aria-en="OUR TIME chapters"
+        data-aria-ko="OUR TIME 시즌"
+      >
+        {projects.map((project) => (
+          <a href={"/work/" + project.slug + "/"}>{project.chapter}</a>
+        ))}
+        <a href="#statement">
+          <span data-lang="en">ARTIST STATEMENT</span>
+          <span data-lang="ko" lang="ko">
+            작가노트
+          </span>
+        </a>
+      </nav>
+    </header>
+    <nav
+      class="season-list"
+      aria-label="Season chapters"
+      data-aria-en="Season chapters"
+      data-aria-ko="시즌별 사진 보기"
+    >
+      {projects.map((project, index) => (
+        <a class="season-entry" href={"/work/" + project.slug + "/"}>
+          <Photo
+            photo={project.photos.find((photo) => photo.name === project.hero)!}
+            eager={index === 0}
+            sizes="(max-width: 700px) 90vw, 68vw"
+          />
+          <span>{project.chapter}</span>
+        </a>
+      ))}
+    </nav>
+    <section
+      id="statement"
+      class="series-statement"
+      aria-label="OUR TIME artist statement"
+      data-aria-en="OUR TIME artist statement"
+      data-aria-ko="OUR TIME 통합 작가노트"
+    >
+      <h2 data-lang="en">Artist Statement</h2>
+      <h2 data-lang="ko" lang="ko">
+        작가노트
+      </h2>
+      <div class="prose statement">
+        <div data-lang="en" lang="en">
+          <StatementEn />
+        </div>
+        <div data-lang="ko" lang="ko">
+          <StatementKo />
+        </div>
+      </div>
+    </section>
+    <a class="text-link back" href="/work/">
+      <span data-lang="en">BACK TO WORK</span>
+      <span data-lang="ko" lang="ko">
+        작품 목록으로
+      </span>
+    </a>
+  </article>
+</Layout>

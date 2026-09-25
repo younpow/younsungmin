@@ -1,7 +1,7 @@
 {
   "biography": {
-    "en": "YOUN SUNGMIN is a photographer based in South Korea. Alongside his photographic practice, he works as an elementary school teacher and has led Danbit, a youth photography project, since 2014. His long-term photographic projects examine time, family, distance, growth, and the traces left in everyday spaces through repeated observation.",
-    "ko": "YOUN SUNGMIN은 한국을 기반으로 활동하는 사진작가다. 사진 작업과 함께 초등학교 교사로 일하며, 2014년부터 청소년 사진 프로젝트 단빛을 이끌고 있다. 반복적인 관찰을 통해 시간, 가족, 거리, 성장, 그리고 일상의 공간에 남겨진 흔적을 장기적인 사진 작업으로 살펴본다."
+    "en": "YOUN SUNGMIN is a photographer based in South Korea. His work considers shared time and changing distance through repeated observations of a child and the spaces around her. He also works as an elementary school teacher and has led Danbit, a youth photography project, since 2014.",
+    "ko": "YOUN SUNGMIN은 한국을 기반으로 활동하는 사진작가다. 아이와 그를 둘러싼 공간을 거듭 관찰하며 함께한 시간과 달라지는 거리를 살핀다. 초등학교 교사로 일하며, 2014년부터 청소년 사진 프로젝트 단빛을 이끌고 있다."
   },
   "cv": [
     {
@@ -26,7 +26,8 @@
         {
           "year": "2026",
           "en": "OUR TIME — 2026 SUMMER. First edition; 28 pages, 14 photographs; 257 × 188 mm; saddle-stitched; printed in Korea.",
-          "ko": "OUR TIME — 2026 SUMMER. 초판; 28쪽, 사진 14점; 257 × 188 mm; 중철 제본; 한국 인쇄."
+          "ko": "OUR TIME — 2026 SUMMER. 초판; 28쪽, 사진 14점; 257 × 188 mm; 중철 제본; 한국 인쇄.",
+          "href": "/book/our-time/2026-summer/"
         }
       ]
     }

@@ -4,8 +4,45 @@
   "chapter": "",
   "slug": "origin",
   "order": 3,
-  "published": false,
-  "hero": "01.jpg",
+  "published": true,
+  "completed": true,
+  "hero": "lens_05.jpg",
+  "expectedImages": 6,
+  "imageOrder": [
+    "lens_01.jpg",
+    "lens_06.jpg",
+    "lens_02.jpg",
+    "lens_03.jpg",
+    "lens_04.jpg",
+    "lens_05.jpg"
+  ],
   "imageDirectory": "/media/work/origin",
-  "alt": {}
+  "alt": {
+    "lens_01.jpg": {
+      "en": "A newborn seen through a blurred surface.",
+      "ko": "흐릿한 표면 너머로 보이는 신생아."
+    },
+    "lens_06.jpg": {
+      "en": "A newborn's small hand.",
+      "ko": "신생아의 작은 손."
+    },
+    "lens_02.jpg": {
+      "en": "A figure's silhouette behind a curtain.",
+      "ko": "커튼 뒤 인물의 실루엣."
+    },
+    "lens_03.jpg": {
+      "en": "Part of a figure visible through a gap in the curtain.",
+      "ko": "커튼 틈으로 일부 드러난 인물."
+    },
+    "lens_04.jpg": {
+      "en": "Part of a child visible behind a door.",
+      "ko": "문 뒤로 몸의 일부가 보이는 아이."
+    },
+    "lens_05.jpg": {
+      "en": "A child reaching with both hands toward a blue door.",
+      "ko": "파란 문을 향해 두 손을 뻗는 아이."
+    }
+  },
+  "seoTitle": "ORIGIN | YOUN SUNGMIN",
+  "seoDescription": "A completed photographic project by Youn Sungmin, presented in six photographs."
 }

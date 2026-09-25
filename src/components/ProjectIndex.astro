@@ -1,0 +1,56 @@
+---
+import type { Project } from "../lib/content";
+import Photo from "./Photo.astro";
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+const series = [...new Set(projects.map((project) => project.series))];
+const entries = series.map((name) => {
+  const members = projects.filter((project) => project.series === name);
+  const representative = members.at(-1)!;
+  return {
+    name,
+    members,
+    representative,
+    href:
+      name === "OUR TIME"
+        ? "/work/our-time/"
+        : "/work/" + representative.slug + "/",
+  };
+});
+---
+
+<div class="project-index">
+  {entries.map(({ name, members, representative, href }, index) => (
+    <section
+      class="project-index-card"
+      id={"series-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
+    >
+      <h2>
+        <a href={href}>{name}</a>
+      </h2>
+      <a class="project-index-image" href={href}>
+        <Photo
+          photo={representative.photos.find(
+            (photo) => photo.name === representative.hero,
+          )!}
+          eager={index === 0}
+          sizes="(max-width: 700px) 90vw, 42vw"
+        />
+      </a>
+      {name === "OUR TIME" && (
+        <nav
+          class="project-chapters"
+          aria-label="OUR TIME chapters"
+          data-aria-en="OUR TIME chapters"
+          data-aria-ko="OUR TIME 시즌"
+        >
+          {members.map((project) => (
+            <a href={"/work/" + project.slug + "/"}>{project.chapter}</a>
+          ))}
+        </nav>
+      )}
+    </section>
+  ))}
+</div>

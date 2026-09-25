@@ -10,15 +10,37 @@ const groups = [...new Set(projects.map((p) => p.series))];
 
 <div class="work-list">
   {groups.map((series) => (
-    <section class="series">
-      <h2>{series}</h2>
+    <section
+      class="series"
+      id={"series-" + series.toLowerCase().replace(/[^a-z0-9]+/g, "-")}
+    >
+      <h2>
+        <a
+          href={
+            series === "OUR TIME"
+              ? "/work/our-time/"
+              : "/work/" + projects.find((p) => p.series === series)!.slug + "/"
+          }
+        >
+          {series}
+        </a>
+      </h2>
       <div>
         {projects
           .filter((p) => p.series === series)
           .map((p) => (
             <a class="work-entry" href={"/work/" + p.slug + "/"}>
-              <Photo photo={p.photos.find((i) => i.name === p.hero)!} />
-              <span>{p.chapter || p.title}</span>
+              <Photo
+                photo={p.photos.find((i) => i.name === p.hero)!}
+                sizes="(max-width: 700px) 90vw, 52vw"
+              />
+              {p.chapter ? (
+                <span>{p.chapter}</span>
+              ) : p.title !== series ? (
+                <span>{p.title}</span>
+              ) : (
+                <span class="sr-only">{p.title}</span>
+              )}
             </a>
           ))}
       </div>

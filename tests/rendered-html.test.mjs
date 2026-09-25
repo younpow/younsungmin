@@ -12,6 +12,21 @@ test("numeric sequence is stable and rejects duplicates", () => {
   ]);
   assert.throws(() => sortImages(["01.jpg", "1.webp"]));
   assert.throws(() => sortImages(["cover.jpg"]));
+  assert.deepEqual(
+    sortImages(["distance_10.jpg", "distance_02.jpg", "distance_01.jpg"]),
+    ["distance_01.jpg", "distance_02.jpg", "distance_10.jpg"],
+  );
+  assert.deepEqual(
+    sortImages(
+      ["lens_01.jpg", "lens_02.jpg", "lens_03.jpg"],
+      ["lens_03.jpg", "lens_01.jpg", "lens_02.jpg"],
+    ),
+    ["lens_03.jpg", "lens_01.jpg", "lens_02.jpg"],
+  );
+  assert.throws(() =>
+    sortImages(["lens_01.jpg", "lens_02.jpg"], ["lens_01.jpg"]),
+  );
+
 });
 test("book preserves cover, spreads, blank-page positions and last page", () => {
   assert.deepEqual(bookPages(1, 6, true), [1]);
@@ -34,6 +49,9 @@ test("static routes and local links resolve, deployment domain is retained", asy
   for (const route of [
     "index.html",
     "work/index.html",
+    "work/origin/index.html",
+    "work/distance/index.html",
+    "work/our-time/index.html",
     "about/index.html",
     "contact/index.html",
     "404.html",
@@ -55,9 +73,43 @@ test("static routes and local links resolve, deployment domain is retained", asy
     (await fs.readFile("dist/CNAME", "utf8")).trim(),
     "younsungmin.com",
   );
+  const sitemap = await fs.readFile("dist/sitemap.xml", "utf8");
+  assert.match(sitemap, /https:\/\/younsungmin.com\/about\//);
+  assert.match(sitemap, /https:\/\/younsungmin.com\/work\/origin\//);
+  assert.match(sitemap, /https:\/\/younsungmin.com\/work\/distance\//);
+  const distance = await fs.readFile("dist/work/distance/index.html", "utf8");
+  assert.match(distance, /<title>DISTANCE — Youn Sungmin<\/title>/);
   assert.match(
-    await fs.readFile("dist/sitemap.xml", "utf8"),
-    /https:\/\/younsungmin.com\/about\//,
+    distance,
+    /property="og:image" content="https:\/\/younsungmin.com\/media\/work\/distance\/distance_06\.jpg"/,
+  );
+  const distanceOrder = [
+    "distance_01.jpg", "distance_02.jpg", "distance_04.jpg", "distance_05.jpg",
+    "distance_06.jpg", "distance_07.jpg", "distance_09.jpg", "distance_10.jpg",
+  ];
+  const positions = distanceOrder.map((name) =>
+    distance.indexOf(`src="/media/work/distance/${name}"`),
+  );
+  assert.ok(
+    positions.every(
+      (position, index) =>
+        position >= 0 && (index === 0 || positions[index - 1] < position),
+    ),
+  );
+  assert.doesNotMatch(distance, /distance_(?:03|08)(?:-\d+)?\.(?:jpg|webp)/);
+  const work = await fs.readFile("dist/work/index.html", "utf8");
+  assert.ok(
+    work.indexOf("OUR TIME") < work.indexOf("DISTANCE") &&
+      work.indexOf("DISTANCE") < work.indexOf("ORIGIN"),
+  );
+  const origin = await fs.readFile("dist/work/origin/index.html", "utf8");
+  assert.match(
+    origin,
+    /<link rel="canonical" href="https:\/\/younsungmin.com\/work\/origin\/"/,
+  );
+  assert.match(
+    origin,
+    /property="og:image" content="https:\/\/younsungmin.com\/media\/work\/origin\/lens_05\.jpg"/,
   );
 });
 test("unpublished work is absent from public pages and sitemap", async () => {

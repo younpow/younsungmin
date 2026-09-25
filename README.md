@@ -11,10 +11,10 @@ Open http://localhost:4321. Run `npm test` before deployment and `npm run previe
 
 See [CONTENT_GUIDE.md](CONTENT_GUIDE.md) for Korean content and publishing instructions.
 
-Photos and book PDFs have not been supplied. Projects start unpublished; no substitute photography is included.
+The published projects are OUR TIME — 2026 SPRING (4 photographs), OUR TIME — 2026 SUMMER (14 photographs and an artist book), DISTANCE (8 photographs), and ORIGIN (6 photographs). The OUR TIME hub is at `/work/our-time/`. Interface labels and photograph descriptions are available in English and Korean.
 
-The previous vinext/Cloudflare starter in app/, worker/, db/, examples/ and related config files is retained as inactive reference. Astro builds only src/. Existing .openai/hosting.json and root CNAME are preserved. The active deployment is .github/workflows/pages.yml and public/CNAME. No production deployment has been performed.
+Original photographs and import manifests are kept in the ignored `local-originals/` folder. Only prepared web images under `public/media/` are deployed. Update the photograph count and order in each project's `meta.json`, remove obsolete web derivatives, then run `npm test`.
 
-## Verification
+The active deployment is GitHub Pages through [.github/workflows/pages.yml](.github/workflows/pages.yml), which builds and tests `dist` on pushes to `main`. The previous vinext/Cloudflare starter in `app/`, `worker/`, `db/`, `examples/` and related configuration is inactive reference code; Astro does not include it in the published site. The root and `public/CNAME` files keep `younsungmin.com` on GitHub Pages.
 
-`npm test` checks TypeScript, ESLint, production build, static links, numeric sequence, book spreads, unpublished routes and image preparation. `npm run test:browser` uses installed Microsoft Edge headlessly, with isolated geometric image/PDF fixtures under ignored outputs/qa-site. It checks six routes at 1440, 1280, 768 and 390px, lightbox keyboard/focus, language persistence, blank PDF pages, mobile page order and PDF failure fallback. It does not publish fixtures. Actual artwork and final book sequencing require review after content is supplied.
+`npm test` checks TypeScript, ESLint, the production build, static links and content ordering, book spreads, unpublished routes, and image preparation. `npm run test:browser` checks responsive layouts, lightbox controls, language persistence and book rendering using isolated fixtures. The actual artwork and book still need the photographer's final visual review.

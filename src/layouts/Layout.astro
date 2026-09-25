@@ -56,13 +56,20 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   </head>
   <body>
     <a class="skip" href="#main">
-      Skip to content
+      <span data-lang="en">Skip to content</span>
+      <span data-lang="ko" lang="ko">
+        본문으로 건너뛰기
+      </span>
     </a>
     <header class="header">
       <a class="wordmark" href="/">
         YOUN SUNGMIN
       </a>
-      <nav aria-label="Main navigation">
+      <nav
+        aria-label="Main navigation"
+        data-aria-en="Main navigation"
+        data-aria-ko="주요 메뉴"
+      >
         {[
           ["WORK", "/work/"],
           ["ABOUT", "/about/"],
@@ -77,7 +84,12 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
             {label}
           </a>
         ))}
-        <span class="languages" aria-label="Language">
+        <span
+          class="languages"
+          aria-label="Language"
+          data-aria-en="Language"
+          data-aria-ko="언어 선택"
+        >
           <button data-language="en" lang="en" aria-pressed="true">
             EN
           </button>

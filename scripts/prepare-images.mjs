@@ -14,7 +14,10 @@ const normalized = names.map((n) => n.replace(/\.[^.]+$/, ".jpg"));
 sortImages(normalized);
 await fs.mkdir(path.join(target, "responsive"), { recursive: true });
 for (const name of names) {
-  const base = String(parseInt(name)).padStart(2, "0");
+  const stem = path.parse(name).name;
+  const base = /^[a-z][a-z0-9-]*_\d+$/i.test(stem)
+    ? stem
+    : String(parseInt(stem, 10)).padStart(2, "0");
   const input = path.join(source, name);
   await sharp(input)
     .rotate()
