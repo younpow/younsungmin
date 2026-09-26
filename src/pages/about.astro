@@ -16,16 +16,22 @@ const cv = about.cv as CV[];
 
 <Layout
   title="About | YOUN SUNGMIN"
-  description="Biography and selected photographic activity and artist books by Youn Sungmin."
+  description="Biography of South Korean photographer Youn Sungmin, whose long-term photographic practice explores time, distance, growth, memory, and traces in everyday spaces."
   image="/media/home/ourtime_2026-03-08_01.jpg"
 >
   <article class="text-page">
     <h1>ABOUT</h1>
     <div class="prose">
-      <p data-lang="en">{about.biography.en}</p>
-      <p data-lang="ko" lang="ko">
-        {about.biography.ko}
-      </p>
+      <div data-lang="en" lang="en">
+        {about.biography.en.split(/\n\s*\n/).map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+      <div data-lang="ko" lang="ko">
+        {about.biography.ko.split(/\n\s*\n/).map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
     </div>
     {cv.some((group) => group.entries.length > 0) && (
       <section class="cv">

@@ -8,6 +8,7 @@ import sharp from "sharp";
 import { chromium } from "@playwright/test";
 const root = process.cwd(),
   fixture = path.join(root, "outputs/qa-site");
+await fs.rm(fixture, { recursive: true, force: true });
 await fs.mkdir(fixture, { recursive: true });
 for (const name of ["src", "scripts", "public"])
   await fs.cp(path.join(root, name), path.join(fixture, name), {
@@ -153,12 +154,43 @@ try {
   await page.goto("http://127.0.0.1:4322/");
   assert.equal(
     await page.locator(".home-hero > a").getAttribute("href"),
-    "/work/",
+    "/work/our-time/",
   );
   assert.equal(
-    await page.locator(".hero-note a").getAttribute("href"),
+    await page.locator(".hero-note h1 a").getAttribute("href"),
+    "/work/our-time/",
+  );
+  assert.equal(
+    await page.locator(".hero-note .text-link").getAttribute("href"),
     "/work/",
   );
+  assert.match(
+    await page.locator('meta[name="description"]').getAttribute("content"),
+    /long-term observation of time, distance, growth, memory/,
+  );
+  assert.doesNotMatch(
+    await page.locator('meta[name="description"]').getAttribute("content"),
+    /\bchild\b/i,
+  );
+  assert.deepEqual(
+    await page
+      .locator(".selected .project-index-card > h2")
+      .evaluateAll((headings) => headings.map((heading) => heading.innerText)),
+    ["OUR TIME", "DISTANCE", "ORIGIN"],
+  );
+  assert.equal(await page.locator(".selected .project-chapters").count(), 0);
+  await page.goto("http://127.0.0.1:4322/work/our-time/");
+  assert.equal(await page.locator(".season-entry").count(), 2);
+  assert.match(
+    await page.locator('.statement [data-lang="en"]').innerText(),
+    /OUR TIME observes the time accumulated through ordinary days/,
+  );
+  await page.locator('[data-language="ko"]').click();
+  assert.match(
+    await page.locator('.statement [data-lang="ko"]').innerText(),
+    /함께 보낸 시간은 특별한 사건보다 반복되는 일상 속에 쌓인다/,
+  );
+  await page.locator('[data-language="en"]').click();
   await page.goto("http://127.0.0.1:4322/work/");
   assert.deepEqual(
     await page
@@ -265,12 +297,23 @@ try {
   await page.goto("http://127.0.0.1:4322/work/distance/");
   assert.equal(await page.locator("h1").innerText(), "DISTANCE");
   assert.match(await page.locator(".project-history").innerText(), /2021/);
-  assert.equal(await page.locator("[data-photo]").count(), 10);
+  assert.equal(await page.locator("[data-photo]").count(), 8);
   assert.deepEqual(
-    await page.locator("[data-photo] img").evaluateAll((imgs) =>
-      imgs.map((img) => img.getAttribute("src").split("/").pop()),
-    ),
-    Array.from({ length: 10 }, (_, index) => `distance_${String(index + 1).padStart(2, "0")}.jpg`),
+    await page
+      .locator("[data-photo] img")
+      .evaluateAll((imgs) =>
+        imgs.map((img) => img.getAttribute("src").split("/").pop()),
+      ),
+    [
+      "distance_01.jpg",
+      "distance_02.jpg",
+      "distance_04.jpg",
+      "distance_05.jpg",
+      "distance_06.jpg",
+      "distance_07.jpg",
+      "distance_09.jpg",
+      "distance_10.jpg",
+    ],
   );
   assert.match(
     await page.locator('meta[property="og:image"]').getAttribute("content"),
@@ -281,33 +324,64 @@ try {
     await img.evaluate((image) => image.decode());
   }
   assert.ok(
-    await page.locator("[data-photo] img").evaluateAll((imgs) =>
-      imgs.every((img) =>
-        getComputedStyle(img).objectFit === "contain" &&
-        img.naturalWidth > 0 &&
-        img.naturalHeight > 0 &&
-        Math.abs(Number(img.getAttribute("width")) / Number(img.getAttribute("height")) - img.naturalWidth / img.naturalHeight) < 0.002,
+    await page
+      .locator("[data-photo] img")
+      .evaluateAll((imgs) =>
+        imgs.every(
+          (img) =>
+            getComputedStyle(img).objectFit === "contain" &&
+            img.naturalWidth > 0 &&
+            img.naturalHeight > 0 &&
+            Math.abs(
+              Number(img.getAttribute("width")) /
+                Number(img.getAttribute("height")) -
+                img.naturalWidth / img.naturalHeight,
+            ) < 0.002,
+        ),
       ),
-    ),
   );
   await page.locator('[data-language="ko"]').click();
   assert.match(await page.locator(".project-history").innerText(), /2021년/);
-  assert.match(await page.locator('[data-photo="0"] img').getAttribute("alt"), /돌길/);
+  assert.match(
+    await page.locator('[data-photo="0"] img').getAttribute("alt"),
+    /돌길/,
+  );
   await page.locator('[data-language="en"]').click();
   await page.locator('[data-photo="0"]').click();
-  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_01\.jpg$/);
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /distance_01\.jpg$/,
+  );
   await page.keyboard.press("ArrowRight");
-  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_02\.jpg$/);
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /distance_02\.jpg$/,
+  );
   await page.locator(".lightbox-next").click();
-  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_03\.jpg$/);
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /distance_04\.jpg$/,
+  );
   await page.keyboard.press("Escape");
-  assert.equal(await page.locator("dialog").evaluate((dialog) => dialog.open), false);  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(
+    await page.locator("dialog").evaluate((dialog) => dialog.open),
+    false,
+  );
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("http://127.0.0.1:4322/work/distance/");
-  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  assert.ok(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  );
   await page.locator('[data-photo="0"]').click();
   await page.locator(".lightbox-next").click();
-  assert.match(await page.locator("dialog img").getAttribute("src"), /distance_02\.jpg$/);
-  await page.keyboard.press("Escape");  await page.setViewportSize({ width: 390, height: 844 });
+  assert.match(
+    await page.locator("dialog img").getAttribute("src"),
+    /distance_02\.jpg$/,
+  );
+  await page.keyboard.press("Escape");
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("http://127.0.0.1:4322/work/origin/");
   assert.ok(
     await page.evaluate(
@@ -427,6 +501,20 @@ try {
   assert.equal(await page.locator("html").getAttribute("lang"), "ko");
   await page.goto("http://127.0.0.1:4322/about/");
   assert.equal(await page.locator("html").getAttribute("lang"), "ko");
+  assert.equal(
+    await page.locator("article.text-page .prose > [data-lang='en'] p").count(),
+    3,
+  );
+  assert.equal(
+    await page.locator("article.text-page .prose > [data-lang='ko'] p").count(),
+    3,
+  );
+  assert.doesNotMatch(
+    await page
+      .locator("article.text-page .prose > [data-lang='en']")
+      .innerText(),
+    /\b(she|her|daughter)\b/i,
+  );
   assert.ok(await page.locator('[data-lang="ko"]').first().isVisible());
   assert.match(await page.locator("body").innerText(), /\uB2E8\uBE5B/);
   assert.match(await page.locator("body").innerText(), /\uCD08\uD310/);

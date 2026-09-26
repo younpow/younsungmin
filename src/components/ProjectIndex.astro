@@ -3,8 +3,9 @@ import type { Project } from "../lib/content";
 import Photo from "./Photo.astro";
 interface Props {
   projects: Project[];
+  showChapters?: boolean;
 }
-const { projects } = Astro.props;
+const { projects, showChapters = true } = Astro.props;
 const series = [...new Set(projects.map((project) => project.series))];
 const entries = series.map((name) => {
   const members = projects.filter((project) => project.series === name);
@@ -39,7 +40,7 @@ const entries = series.map((name) => {
           sizes="(max-width: 700px) 90vw, 42vw"
         />
       </a>
-      {name === "OUR TIME" && (
+      {showChapters && name === "OUR TIME" && (
         <nav
           class="project-chapters"
           aria-label="OUR TIME chapters"
