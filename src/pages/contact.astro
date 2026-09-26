@@ -11,5 +11,26 @@ import site from "../config/site.json";
   <section class="text-page contact">
     <h1>CONTACT</h1>
     <a href={"mailto:" + site.email}>{site.email}</a>
+    <p class="danbit-link">
+      <a
+        href="https://danbit.gallery"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span data-lang="en">Danbit — youth photography project</span>
+        <span data-lang="ko" lang="ko">단빛 — 청소년 사진 프로젝트</span>
+        <span aria-hidden="true"> ↗</span>
+      </a>
+    </p>
   </section>
+  <style>
+    .danbit-link {
+      margin-top: 28px;
+    }
+
+    .danbit-link a {
+      color: #737373;
+      font-size: 11px;
+    }
+  </style>
 </Layout>
