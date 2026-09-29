@@ -12,6 +12,7 @@ interface CV {
   entries: Entry[];
 }
 const cv = about.cv as CV[];
+const isExternalHref = (href: string) => href.startsWith("https://");
 ---
 
 <Layout
@@ -57,11 +58,24 @@ const cv = about.cv as CV[];
                     <dt>{entry.year}</dt>
                     <dd>
                       {entry.href ? (
-                        <a href={entry.href}>
+                        <a
+                          href={entry.href}
+                          target={
+                            isExternalHref(entry.href) ? "_blank" : undefined
+                          }
+                          rel={
+                            isExternalHref(entry.href)
+                              ? "noopener noreferrer"
+                              : undefined
+                          }
+                        >
                           <span data-lang="en">{entry.en}</span>
                           <span data-lang="ko" lang="ko">
                             {entry.ko}
                           </span>
+                          {isExternalHref(entry.href) && (
+                            <span aria-hidden="true"> ↗</span>
+                          )}
                         </a>
                       ) : (
                         <>
@@ -79,5 +93,18 @@ const cv = about.cv as CV[];
           ))}
       </section>
     )}
+    <p class="about-writing">
+      <a
+        href="https://brunch.co.kr/@nabodado"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span data-lang="en">Writing on Brunch</span>
+        <span data-lang="ko" lang="ko">
+          브런치에서 글 읽기
+        </span>
+        <span aria-hidden="true"> ↗</span>
+      </a>
+    </p>
   </article>
 </Layout>

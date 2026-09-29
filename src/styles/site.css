@@ -388,6 +388,22 @@ footer {
 .contact a {
   font-size: 16px;
 }
+.contact .contact-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 28px;
+}
+.contact .contact-links a {
+  color: #737373;
+  font-size: 11px;
+}
+.about-writing {
+  margin-top: 48px;
+  color: #737373;
+  font-size: 12px;
+}
 .home-intro {
   min-height: 35vh;
 }

@@ -210,7 +210,9 @@ try {
   await page.goto("http://127.0.0.1:4322/work/origin/");
   assert.equal(await page.locator("h1").innerText(), "ORIGIN");
   assert.equal(await page.locator(".project-history").count(), 0);
-  assert.equal(await page.locator(".statement").count(), 0);
+  assert.equal(await page.locator(".statement").count(), 1);
+  assert.equal(await page.locator('.statement [data-lang="en"] p').count(), 2);
+  assert.equal(await page.locator('.statement [data-lang="ko"] p').count(), 2);
   assert.equal(await page.locator('a[href^="/book/"]').count(), 0);
   assert.equal(await page.locator(".back").getAttribute("href"), "/work/");
   assert.equal(

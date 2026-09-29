@@ -1,0 +1,3 @@
+ORIGIN observes a child beginning to encounter their own body and the world around them within the familiar space of home. The small body, once held in someone's arms and guided by the hand, begins to change position on its own, place its feet on the floor, and reach toward a closed door. The movement continues even when only part of the body is visible through blurred surfaces and curtains.
+
+Caring for the child from close by, I photographed these changes. The space that shelters the child becomes a place to explore, and the ways we share that space gradually change as well. ORIGIN is the first chapter in my observation of the relationship between the child and the surrounding world, later continuing in DISTANCE and OUR TIME.
