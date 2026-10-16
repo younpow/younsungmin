@@ -6,6 +6,7 @@ export async function GET() {
     "/",
     "/work/",
     "/work/our-time/",
+    "/work/then-and-then/",
     "/about/",
     "/contact/",
     ...projects.map((p) => "/work/" + p.slug + "/"),

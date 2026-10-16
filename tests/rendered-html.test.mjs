@@ -26,7 +26,6 @@ test("numeric sequence is stable and rejects duplicates", () => {
   assert.throws(() =>
     sortImages(["lens_01.jpg", "lens_02.jpg"], ["lens_01.jpg"]),
   );
-
 });
 test("book preserves cover, spreads, blank-page positions and last page", () => {
   assert.deepEqual(bookPages(1, 6, true), [1]);
@@ -50,6 +49,7 @@ test("static routes and local links resolve, deployment domain is retained", asy
     "index.html",
     "work/index.html",
     "work/origin/index.html",
+    "work/then-and-then/index.html",
     "work/distance/index.html",
     "work/our-time/index.html",
     "about/index.html",
@@ -77,6 +77,7 @@ test("static routes and local links resolve, deployment domain is retained", asy
   assert.match(sitemap, /https:\/\/younsungmin.com\/about\//);
   assert.match(sitemap, /https:\/\/younsungmin.com\/work\/origin\//);
   assert.match(sitemap, /https:\/\/younsungmin.com\/work\/distance\//);
+  assert.match(sitemap, /https:\/\/younsungmin.com\/work\/then-and-then\//);
   const distance = await fs.readFile("dist/work/distance/index.html", "utf8");
   assert.match(distance, /<title>DISTANCE — Youn Sungmin<\/title>/);
   assert.match(
@@ -84,8 +85,14 @@ test("static routes and local links resolve, deployment domain is retained", asy
     /property="og:image" content="https:\/\/younsungmin.com\/media\/work\/distance\/distance_06\.jpg"/,
   );
   const distanceOrder = [
-    "distance_01.jpg", "distance_02.jpg", "distance_04.jpg", "distance_05.jpg",
-    "distance_06.jpg", "distance_07.jpg", "distance_09.jpg", "distance_10.jpg",
+    "distance_01.jpg",
+    "distance_02.jpg",
+    "distance_04.jpg",
+    "distance_05.jpg",
+    "distance_06.jpg",
+    "distance_07.jpg",
+    "distance_09.jpg",
+    "distance_10.jpg",
   ];
   const positions = distanceOrder.map((name) =>
     distance.indexOf(`src="/media/work/distance/${name}"`),
@@ -100,7 +107,24 @@ test("static routes and local links resolve, deployment domain is retained", asy
   const work = await fs.readFile("dist/work/index.html", "utf8");
   assert.ok(
     work.indexOf("OUR TIME") < work.indexOf("DISTANCE") &&
-      work.indexOf("DISTANCE") < work.indexOf("ORIGIN"),
+      work.indexOf("DISTANCE") < work.indexOf("ORIGIN") &&
+      work.indexOf("ORIGIN") < work.indexOf("THEN AND THEN"),
+  );
+  const interactive = await fs.readFile(
+    "dist/work/then-and-then/index.html",
+    "utf8",
+  );
+  assert.match(
+    interactive,
+    /<link rel="canonical" href="https:\/\/younsungmin.com\/work\/then-and-then\/"/,
+  );
+  assert.match(
+    interactive,
+    /property="og:image" content="https:\/\/younsungmin.com\/media\/work\/then-and-then\/preview-depth\.png"/,
+  );
+  assert.match(
+    interactive,
+    /href="https:\/\/younpow.github.io\/then-and-then-time-room\/"/,
   );
   const origin = await fs.readFile("dist/work/origin/index.html", "utf8");
   assert.match(

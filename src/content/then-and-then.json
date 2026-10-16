@@ -1,0 +1,17 @@
+{
+  "title": "THEN AND THEN",
+  "subtitle": "THE THICKNESS OF TIME",
+  "year": "2026",
+  "url": "https://younpow.github.io/then-and-then-time-room/",
+  "image": "/media/work/then-and-then/preview-depth.png",
+  "imageWidth": 1440,
+  "imageHeight": 900,
+  "imageAlt": {
+    "en": "Preview of an interactive artwork: overlapping views of a room and window with a figure and on-screen controls.",
+    "ko": "방과 창, 인물이 겹쳐 보이는 인터랙티브 작품 화면과 조작 버튼."
+  },
+  "description": {
+    "en": "A room photographed fourteen times. Visitors choose which moments coexist and move their viewpoint to explore overlapping, sliced and depth-shifted views of time. Image and sound respond to those choices in real time.",
+    "ko": "한 공간을 열네 차례 촬영한 작품이다. 관람자는 함께 놓일 순간을 고르고 시점을 움직이며, 겹치고 분할되고 깊이가 달라진 시간의 장면을 살펴본다. 선택에 따라 이미지와 소리가 실시간으로 반응한다."
+  }
+}

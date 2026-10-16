@@ -210,6 +210,30 @@ footer {
   color: #737373;
   font-size: 11px;
 }
+.interactive-kind {
+  margin-top: 20px;
+  color: #737373;
+  font-size: 11px;
+}
+.interactive-page {
+  max-width: 1100px;
+  margin: 90px auto 140px;
+}
+.interactive-page .project-intro {
+  margin-top: 0;
+  margin-bottom: 52px;
+}
+.interactive-preview {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.interactive-instructions {
+  margin-top: 24px;
+  color: #737373;
+  font-size: 12px;
+  line-height: 1.7;
+}
 .series-page .project-intro {
   margin-bottom: 52px;
 }
@@ -684,6 +708,12 @@ html[lang="ko"] [data-lang="en"] {
   }
   .project-chapters {
     margin-top: 16px;
+  }
+  .interactive-kind {
+    margin-top: 16px;
+  }
+  .interactive-page {
+    margin-top: 55px;
   }
   .series-statement {
     margin-bottom: 68px;

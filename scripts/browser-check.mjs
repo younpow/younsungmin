@@ -89,6 +89,7 @@ const types = {
   ".css": "text/css",
   ".pdf": "application/pdf",
   ".jpg": "image/jpeg",
+  ".png": "image/png",
   ".svg": "image/svg+xml",
 };
 const server = http.createServer(async (req, res) => {
@@ -132,6 +133,7 @@ try {
       "/work/our-time/2026-spring/",
       "/work/distance/",
       "/work/origin/",
+      "/work/then-and-then/",
       "/book/our-time/2026-summer/",
     ]) {
       await page.goto("http://127.0.0.1:4322" + route);
@@ -196,13 +198,56 @@ try {
     await page
       .locator(".project-index-card > h2")
       .evaluateAll((headings) => headings.map((heading) => heading.innerText)),
-    ["OUR TIME", "DISTANCE", "ORIGIN"],
+    ["OUR TIME", "DISTANCE", "ORIGIN", "THEN AND THEN"],
   );
   assert.deepEqual(
     await page
       .locator(".project-chapters a")
       .evaluateAll((links) => links.map((a) => a.getAttribute("href"))),
     ["/work/our-time/2026-spring/", "/work/our-time/2026-summer/"],
+  );
+  assert.equal(
+    await page.locator("#series-then-and-then a").first().getAttribute("href"),
+    "/work/then-and-then/",
+  );
+  await page.locator('[data-language="ko"]').click();
+  assert.equal(
+    await page.locator("#series-then-and-then .interactive-kind").innerText(),
+    "인터랙티브 사진 작품",
+  );
+  await page.locator('[data-language="en"]').click();
+  await page.goto("http://127.0.0.1:4322/work/then-and-then/");
+  assert.equal(await page.locator("h1").innerText(), "THEN AND THEN");
+  assert.equal(
+    await page
+      .locator('a[href^="https://younpow.github.io/"]')
+      .getAttribute("href"),
+    "https://younpow.github.io/then-and-then-time-room/",
+  );
+  assert.equal(
+    await page.locator("link[rel='canonical']").getAttribute("href"),
+    "https://younsungmin.com/work/then-and-then/",
+  );
+  const preview = page.locator(".interactive-preview");
+  await preview.evaluate((img) => img.decode());
+  assert.deepEqual(
+    await preview.evaluate((img) => [img.naturalWidth, img.naturalHeight]),
+    [1440, 900],
+  );
+  await page.locator('[data-language="ko"]').click();
+  assert.match(
+    await page.locator(".interactive-page .statement").innerText(),
+    /한 공간을 열네 차례 촬영한 작품이다/,
+  );
+  assert.match(await preview.getAttribute("alt"), /방과 창/);
+  await page.locator('[data-language="en"]').click();
+  assert.match(
+    await page.locator(".interactive-page .statement").innerText(),
+    /A room photographed fourteen times/,
+  );
+  assert.equal(
+    await page.locator(".interactive-page .back").getAttribute("href"),
+    "/work/",
   );
   await page.goto("http://127.0.0.1:4322/work/our-time/");
   assert.ok(await page.locator("#statement").isVisible());
@@ -602,7 +647,7 @@ try {
   assert.ok(await page.locator(".book-fallback a").isVisible());
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: ten routes at four widths; OUR TIME statement and season links; Spring, DISTANCE and ORIGIN images, order, language, lightbox and mobile; top-level WORK projects; unchanged home hero and Summer book; existing Summer/book regressions.",
+    "PASS: eleven routes at four widths; THEN AND THEN entry, preview, bilingual page and external link; OUR TIME statement and season links; Spring, DISTANCE and ORIGIN images, order, language, lightbox and mobile; top-level WORK projects; unchanged home hero and Summer book; existing Summer/book regressions.",
   );
 } finally {
   await browser?.close();

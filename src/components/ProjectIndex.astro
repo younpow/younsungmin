@@ -1,11 +1,13 @@
 ---
 import type { Project } from "../lib/content";
 import Photo from "./Photo.astro";
+import interactive from "../content/then-and-then.json";
 interface Props {
   projects: Project[];
   showChapters?: boolean;
+  showInteractive?: boolean;
 }
-const { projects, showChapters = true } = Astro.props;
+const { projects, showChapters = true, showInteractive = false } = Astro.props;
 const series = [...new Set(projects.map((project) => project.series))];
 const entries = series.map((name) => {
   const members = projects.filter((project) => project.series === name);
@@ -54,4 +56,31 @@ const entries = series.map((name) => {
       )}
     </section>
   ))}
+  {showInteractive && (
+    <section class="project-index-card" id="series-then-and-then">
+      <h2>
+        <a href="/work/then-and-then/">{interactive.title}</a>
+      </h2>
+      <a class="project-index-image" href="/work/then-and-then/">
+        <img
+          class="artwork"
+          src={interactive.image}
+          width={interactive.imageWidth}
+          height={interactive.imageHeight}
+          alt={interactive.imageAlt.en}
+          data-alt-en={interactive.imageAlt.en}
+          data-alt-ko={interactive.imageAlt.ko}
+          loading="lazy"
+          decoding="async"
+          draggable="false"
+        />
+      </a>
+      <p class="interactive-kind">
+        <span data-lang="en">INTERACTIVE PHOTOGRAPHIC ARTWORK</span>
+        <span data-lang="ko" lang="ko">
+          인터랙티브 사진 작품
+        </span>
+      </p>
+    </section>
+  )}
 </div>

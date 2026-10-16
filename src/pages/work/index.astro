@@ -2,13 +2,17 @@
 import Layout from "../../layouts/Layout.astro";
 import ProjectIndex from "../../components/ProjectIndex.astro";
 import { getProjects } from "../../lib/content";
+import interactive from "../../content/then-and-then.json";
 const projects = await getProjects();
-const series = [...new Set(projects.map((project) => project.series))];
+const series = [
+  ...new Set(projects.map((project) => project.series)),
+  interactive.title,
+];
 ---
 
 <Layout
   title="Work | YOUN SUNGMIN"
-  description="Selected photographic projects by Youn Sungmin: OUR TIME, DISTANCE and ORIGIN."
+  description="Photographic projects and interactive artwork by Youn Sungmin: OUR TIME, DISTANCE, ORIGIN and THEN AND THEN."
   image="/media/home/ourtime_2026-03-08_01.jpg"
 >
   <section class="work-page">
@@ -27,7 +31,7 @@ const series = [...new Set(projects.map((project) => project.series))];
         ))}
       </nav>
     )}
-    <ProjectIndex projects={projects} />
+    <ProjectIndex projects={projects} showInteractive />
     {!projects.length && (
       <a class="text-link" href="/about/">
         ABOUT THE ARTIST

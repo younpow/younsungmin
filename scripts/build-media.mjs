@@ -53,16 +53,51 @@ export function mediaGuard() {
           }
           if (meta.book && meta.bookReviewed) allowed.add(meta.book.slice(1));
         }
-        const site=JSON.parse(await fs.readFile('src/config/site.json','utf8'));
-        if(site.heroPhoto && published.has(site.heroProject)) {
-          const urls=[site.heroPhoto.src,...(site.heroPhoto.srcset||'').split(',').map(s=>s.trim().split(' ')[0])];
-          for(const url of new Set(urls)){
-            if(!url.startsWith('/media/home/') || url.includes('..'))throw Error('Invalid home photograph path');
-            const image=await sharp(path.join('public',url)).metadata();
-            if(!image.width||!image.height||Math.max(image.width,image.height)>2000||image.exif||image.xmp||image.iptc)throw Error('Unsafe home photograph');
+        const site = JSON.parse(
+          await fs.readFile("src/config/site.json", "utf8"),
+        );
+        if (site.heroPhoto && published.has(site.heroProject)) {
+          const urls = [
+            site.heroPhoto.src,
+            ...(site.heroPhoto.srcset || "")
+              .split(",")
+              .map((s) => s.trim().split(" ")[0]),
+          ];
+          for (const url of new Set(urls)) {
+            if (!url.startsWith("/media/home/") || url.includes(".."))
+              throw Error("Invalid home photograph path");
+            const image = await sharp(path.join("public", url)).metadata();
+            if (
+              !image.width ||
+              !image.height ||
+              Math.max(image.width, image.height) > 2000 ||
+              image.exif ||
+              image.xmp ||
+              image.iptc
+            )
+              throw Error("Unsafe home photograph");
             allowed.add(url.slice(1));
           }
         }
+        const interactive = JSON.parse(
+          await fs.readFile("src/content/then-and-then.json", "utf8"),
+        );
+        if (interactive.image !== "/media/work/then-and-then/preview-depth.png")
+          throw new Error("Unexpected interactive preview path");
+        const preview = await sharp(
+          path.join("public", interactive.image),
+        ).metadata();
+        if (
+          preview.format !== "png" ||
+          preview.width !== interactive.imageWidth ||
+          preview.height !== interactive.imageHeight ||
+          Math.max(preview.width, preview.height) > 2000 ||
+          preview.exif ||
+          preview.xmp ||
+          preview.iptc
+        )
+          throw new Error("Unsafe interactive preview");
+        allowed.add(interactive.image.slice(1));
         for (const file of await walk(path.join(build, "media"))) {
           const relative = path.relative(build, file).split(path.sep).join("/");
           if (!allowed.has(relative)) await fs.unlink(file);
